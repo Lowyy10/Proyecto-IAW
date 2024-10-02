@@ -1,8 +1,14 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import Reserva  # Importa el modelo de reservas si lo estás usando
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import RegistroForm
 
-@login_required
-def lista_reservas(request):
-    reservas = Reserva.objects.filter(usuario=request.user)  # Filtrar por usuario
-    return render(request, 'reservas/lista_reservas.html', {'reservas': reservas})
+def registro(request):
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('reservas_list')  # Redirigir a la lista de reservas
+    else:
+        form = RegistroForm()
+    return render(request, 'reservas/registro.html', {'form': form})
