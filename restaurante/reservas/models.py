@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Reserva(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -9,4 +10,4 @@ class Reserva(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.usuario.username} - {self.fecha_reserva} a las {self.hora_reserva} para {self.numero_personas} personas'
+        return f'Reserva de {self.usuario} para {self.numero_personas} personas el {self.fecha_reserva} a las {self.hora_reserva}'
