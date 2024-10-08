@@ -32,12 +32,13 @@ class ReservaAdmin(admin.ModelAdmin):
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('nombre_cliente', 'comida', 'estado', 'fecha_pedido')
+    list_display = ('nombre_cliente', 'comida', 'fecha_pedido')  # No se incluye el estado
     search_fields = ('nombre_cliente',)  # Busca por el nombre del cliente
-    list_filter = ('estado', 'fecha_pedido')  # Filtrar por estado y fecha
+    list_filter = ('fecha_pedido',)  # Filtrar por fecha
 
 @admin.register(EstadoPedido)
 class EstadoPedidoAdmin(admin.ModelAdmin):
     list_display = ('pedido', 'estado', 'fecha_actualizacion')
     search_fields = ('pedido__nombre_cliente', 'estado')  # Busca por el nombre del cliente del pedido
     list_filter = ('estado',)  # Filtrar por estado
+
