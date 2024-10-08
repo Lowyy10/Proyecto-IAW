@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Peticion, Reserva, Pedido
-
+from .models import Peticion, Reserva, Pedido, EstadoPedido
 @admin.register(Peticion)
 class PeticionAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'dia_reserva', 'num_personas', 'observaciones')
@@ -10,37 +9,35 @@ class PeticionAdmin(admin.ModelAdmin):
 @admin.register(Reserva)
 class ReservaAdmin(admin.ModelAdmin):
     list_display = ('nombre_persona', 'dia_reserva', 'num_personas', 'estado', 'observaciones')
-    search_fields = ('peticion__nombre',)  # Busca por el nombre en Peticion
-    list_filter = ('peticion__dia_reserva', 'estado')  # Filtrar por estado y fecha
+    search_fields = ('peticion__nombre',)
+    list_filter = ('peticion__dia_reserva', 'estado')
 
-    # Campos calculados en la lista de visualización
     def nombre_persona(self, obj):
-        return obj.peticion.nombre  # Devuelve el nombre de la persona de la petición
+        return obj.peticion.nombre
     
     def dia_reserva(self, obj):
-        return obj.dia_reserva
+        return obj.peticion.dia_reserva
     
     def num_personas(self, obj):
-        return obj.num_personas
+        return obj.peticion.num_personas
 
     def observaciones(self, obj):
-        return obj.observaciones
+        return obj.peticion.observaciones
 
-    # Mostrar el estado directamente en el admin
     def estado(self, obj):
         return obj.estado
     
-    estado.short_description = 'Estado de la Reserva'  # Encabezado personalizado
-    nombre_persona.short_description = 'Nombre de la Persona'  # Encabezado personalizado
+    estado.short_description = 'Estado de la Reserva'
+    nombre_persona.short_description = 'Nombre de la Persona'
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'comida', 'cantidad', 'estado', 'fecha_pedido')
-    search_fields = ('cliente__nombre', 'comida')  # Permite buscar por el nombre del cliente y comida
-    list_filter = ('estado', 'fecha_pedido')  # Filtrar por estado y fecha de pedido
+    list_display = ('nombre_cliente', 'comida', 'estado', 'fecha_pedido')
+    search_fields = ('nombre_cliente',)  # Busca por el nombre del cliente
+    list_filter = ('estado', 'fecha_pedido')  # Filtrar por estado y fecha
 
-    def cliente(self, obj):
-        return obj.cliente.nombre  # Devuelve el nombre del cliente
-
-    cliente.short_description = 'Nombre del Cliente'  # Encabezado personalizado
-
+@admin.register(EstadoPedido)
+class EstadoPedidoAdmin(admin.ModelAdmin):
+    list_display = ('pedido', 'estado', 'fecha_actualizacion')
+    search_fields = ('pedido__nombre_cliente', 'estado')  # Busca por el nombre del cliente del pedido
+    list_filter = ('estado',)  # Filtrar por estado
