@@ -1,44 +1,26 @@
 from django.contrib import admin
-from .models import Peticion, Reserva, Pedido, EstadoPedido
-@admin.register(Peticion)
+from .models import Peticion, Reserva
+
 class PeticionAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'dia_reserva', 'num_personas', 'observaciones')
-    search_fields = ('nombre', 'observaciones')
-    list_filter = ('dia_reserva', 'num_personas')
+    list_display = ('nombre', 'fecha', 'numero_personas')
+    search_fields = ('nombre',)
+    list_filter = ('fecha',)
+    ordering = ('fecha',)
 
-@admin.register(Reserva)
+    class Meta:
+        verbose_name = "Petición"
+        verbose_name_plural = "Peticiones"
+
+
 class ReservaAdmin(admin.ModelAdmin):
-    list_display = ('nombre_persona', 'dia_reserva', 'num_personas', 'estado', 'observaciones')
-    search_fields = ('peticion__nombre',)
-    list_filter = ('peticion__dia_reserva', 'estado')
+    list_display = ('peticion', 'estado')
+    list_filter = ('estado',)
+    ordering = ('peticion__fecha',)
 
-    def nombre_persona(self, obj):
-        return obj.peticion.nombre
-    
-    def dia_reserva(self, obj):
-        return obj.peticion.dia_reserva
-    
-    def num_personas(self, obj):
-        return obj.peticion.num_personas
+    class Meta:
+        verbose_name = "Reserva"
+        verbose_name_plural = "Reservas"
 
-    def observaciones(self, obj):
-        return obj.peticion.observaciones
 
-    def estado(self, obj):
-        return obj.estado
-    
-    estado.short_description = 'Estado de la Reserva'
-    nombre_persona.short_description = 'Nombre de la Persona'
-
-@admin.register(Pedido)
-class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('nombre_cliente', 'comida', 'fecha_pedido')  # No se incluye el estado
-    search_fields = ('nombre_cliente',)  # Busca por el nombre del cliente
-    list_filter = ('fecha_pedido',)  # Filtrar por fecha
-
-@admin.register(EstadoPedido)
-class EstadoPedidoAdmin(admin.ModelAdmin):
-    list_display = ('pedido', 'estado', 'fecha_actualizacion')
-    search_fields = ('pedido__nombre_cliente', 'estado')  # Busca por el nombre del cliente del pedido
-    list_filter = ('estado',)  # Filtrar por estado
-
+admin.site.register(Peticion, PeticionAdmin)
+admin.site.register(Reserva, ReservaAdmin)
