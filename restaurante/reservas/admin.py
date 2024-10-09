@@ -1,26 +1,28 @@
 from django.contrib import admin
-from .models import Peticion, Reserva
+from .models import Platos, Pedidos, PedidoPlato, CatalogoPlatos
 
-class PeticionAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'fecha', 'numero_personas')
-    search_fields = ('nombre',)
-    list_filter = ('fecha',)
-    ordering = ('fecha',)
+class PedidoPlatoInline(admin.TabularInline):
+    model = PedidoPlato
+    extra = 1  # Número de formularios adicionales a mostrar
 
-    class Meta:
-        verbose_name = "Petición"
-        verbose_name_plural = "Peticiones"
+class PlatosAdmin(admin.ModelAdmin):
+    list_display = ('nombre_plato', 'precio_plato')
+    search_fields = ('nombre_plato',)
 
+class PedidosAdmin(admin.ModelAdmin):
+    list_display = ('nombre_persona',)
+    inlines = [PedidoPlatoInline]  # Añadir inlines para gestionar los platos y cantidades
 
-class ReservaAdmin(admin.ModelAdmin):
-    list_display = ('peticion', 'estado')
-    list_filter = ('estado',)
-    ordering = ('peticion__fecha',)
+    def total_precio(self, obj):
+        return obj.total_precio()
+    total_precio.short_description = 'Precio Total'
 
-    class Meta:
-        verbose_name = "Reserva"
-        verbose_name_plural = "Reservas"
+class CatalogoPlatosAdmin(admin.ModelAdmin):
+    list_display = ('nombre_plato', 'precio_plato', 'valoracion', 'comentarios')
+    list_filter = ('valoracion',)
+    search_fields = ('nombre_plato__nombre_plato',)
 
-
-admin.site.register(Peticion, PeticionAdmin)
-admin.site.register(Reserva, ReservaAdmin)
+# Registro de los modelos
+admin.site.register(Platos, PlatosAdmin)
+admin.site.register(Pedidos, PedidosAdmin)
+admin.site.register(CatalogoPlatos, CatalogoPlatosAdmin)
