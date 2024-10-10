@@ -1,0 +1,12 @@
+{% block content %}
+    <h2>Platos</h2>
+    <ul>
+        {% for plato in object_list %}
+            <li>
+                <strong>Plato:</strong> {{ plato.nombre_plato }}
+                <strong></strong> ${{ plato.precio_plato }}<br>
+                <!-- Añade aquí más campos si los tienes -->
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

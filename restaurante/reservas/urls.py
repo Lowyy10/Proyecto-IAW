@@ -1,5 +1,8 @@
 from django.urls import path
-from .views import vista
+from reservas.views import PlatosListView, CatalogoPaltosListView
 
 urlpatterns = [
-    path('vista/',vista, name='vista'),] 
+    path('platos/',PlatosListView.as_view()),
+    path('catalogo_platos/',CatalogoPaltosListView.as_view())
+
+] 

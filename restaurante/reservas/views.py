@@ -1,7 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from reservas.models import Platos, CatalogoPlatos
+from django.views.generic import ListView
 
 
-def vista(request):
-    return HttpResponse('Esta es mi primera vista!')
+class PlatosListView(ListView):
+    model = Platos
 
+class CatalogoPaltosListView(ListView):
+    model = CatalogoPlatos
+
+    

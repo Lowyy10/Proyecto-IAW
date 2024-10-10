@@ -30,6 +30,7 @@ class Pedidos(models.Model):
 class PedidoPlato(models.Model):
     plato = models.ForeignKey(Platos, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
+    observaciones = models.TextField(blank=True, null=True)
     pedido = models.ForeignKey(Pedidos, related_name='pedido_platos', on_delete=models.CASCADE)
 
     class Meta:
