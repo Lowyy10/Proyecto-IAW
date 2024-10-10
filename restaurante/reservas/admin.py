@@ -18,9 +18,9 @@ class PedidosAdmin(admin.ModelAdmin):
     total_precio.short_description = 'Precio Total'
 
 class CatalogoPlatosAdmin(admin.ModelAdmin):
-    list_display = ('nombre_plato', 'precio_plato', 'valoracion', 'comentarios')
+    list_display = ('plato', 'precio_plato', 'valoracion', 'comentarios')
     list_filter = ('valoracion',)
-    search_fields = ('nombre_plato__nombre_plato',)
+    search_fields = ('nombre_plato__plato',)
 
 # Registro de los modelos
 admin.site.register(Platos, PlatosAdmin)

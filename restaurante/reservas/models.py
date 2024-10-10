@@ -1,4 +1,6 @@
 from django.db import models
+class Perfil(models.Model):
+    nombre_per = models.CharField(max_length=50)
 
 class Platos(models.Model):
     nombre_plato = models.CharField(max_length=100)
@@ -50,8 +52,7 @@ class CatalogoPlatos(models.Model):
         (4, '★★★★☆'),
         (5, '★★★★★'),
     ]
-
-    nombre_plato = models.ForeignKey(Platos, on_delete=models.CASCADE, related_name='catalogo_platos')
+    plato = models.ForeignKey(Platos, on_delete=models.CASCADE, related_name='catalogo_platos')
     valoracion = models.IntegerField(choices=ESTRELLAS, default=0)
     comentarios = models.TextField(blank=True, null=True)
 
@@ -60,8 +61,8 @@ class CatalogoPlatos(models.Model):
         verbose_name_plural = "Catálogo de Platos"
 
     def __str__(self):
-        return f"{self.nombre_plato.nombre_plato} - {self.valoracion} estrellas"
+        return f"{self.plato.nombre_plato} - {self.valoracion} estrellas"
 
     @property
     def precio_plato(self):
-        return self.nombre_plato.precio_plato  # Obtener el precio del plato relacionado
+        return self.plato.precio_plato  # Obtener el precio del plato relacionado
