@@ -1,0 +1,71 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f3e6; /* Color suave de fondo */
+    color: #4a2c1a; /* Color de texto marrón */
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #d32f2f; /* Rojo vibrante */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 5px solid #ffeb3b; /* Amarillo brillante */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+nav {
+    margin: 20px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    background-color: #ffeb3b; /* Amarillo brillante */
+    color: #4a2c1a; /* Texto marrón */
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s;
+    font-weight: bold; /* Negrita para más énfasis */
+}
+
+nav ul li a:hover {
+    background-color: #d32f2f; /* Cambia a rojo al pasar el mouse */
+    color: white;
+    transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+main p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+footer {
+    background-color: #d32f2f; /* Rojo vibrante */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

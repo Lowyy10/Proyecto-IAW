@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Inicio</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+<header>
+    <h1>Casa Texas Mexico</h1>
+</header>
+
+<nav>
+    <ul>
+        {% comment %} <li><a href="{% url 'platos_list' %}">Ver Platos</a></li> {% endcomment %}
+        <li><a href="{% url 'catalogo_platos_list' %}">Ver Catálogo de Platos</a></li>
+        {% comment %} <li><a href="{% url 'pedidos_list' %}">Ver Pedidos</a></li> {% endcomment %}
+    </ul>
+</nav>
+
+<main>
+    <img src="https://www.recetasnestlecam.com/sites/default/files/styles/crop_article_banner_desktop_nes/public/2023-08/platos-ingredientes-comida-mexicana.webp?itok=jUeCMfAT">
+</main>
+
+<footer>
+    <p>&copy; 2024 Mi Restaurante Casa Texas Mexico.</p>
+</footer>
+
+</body>
+</html>

@@ -1,11 +1,10 @@
 from django.urls import path
-from reservas.views import PlatosListView, PedidosListView, CatalogoPaltosListView
-from .views import vista
+from reservas.views import PlatosListView, PedidosListView, CatalogoPlatosListView
+from .views import HomeView
 
 urlpatterns = [
-
-    path('platos/',PlatosListView.as_view()),
-    path('catalogo_platos/',CatalogoPaltosListView.as_view()),
-    path('pedidos/',PedidosListView.as_view()),
-    path('',vista,name='vista')
-] 
+    path('platos/', PlatosListView.as_view(), name='platos_list'),  # Verifica que el nombre sea 'platos_list'
+    path('catalogo_platos/', CatalogoPlatosListView.as_view(), name='catalogo_platos_list'),
+    path('pedidos/', PedidosListView.as_view(), name='pedidos_list'),
+    path('', HomeView.as_view(), name='home'),
+]
