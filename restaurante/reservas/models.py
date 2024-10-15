@@ -1,10 +1,22 @@
 from django.db import models
+
 class Perfil(models.Model):
     nombre_per = models.CharField(max_length=50)
+
+class Ingrediente(models.Model):
+    nombre_ingrediente = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Ingrediente"
+        verbose_name_plural = "Ingredientes"
+
+    def __str__(self):
+        return self.nombre_ingrediente
 
 class Platos(models.Model):
     nombre_plato = models.CharField(max_length=100)
     precio_plato = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    ingredientes = models.ManyToManyField(Ingrediente, related_name='platos', blank=True)  # Relación con Ingredientes
 
     class Meta:
         verbose_name = "Plato"
@@ -13,10 +25,9 @@ class Platos(models.Model):
     def __str__(self):
         return self.nombre_plato
 
-
 class Pedidos(models.Model):
     nombre_persona = models.CharField(max_length=50)
-    platos = models.ManyToManyField(Platos, through='PedidoPlato', related_name='pedidos')  # Relación con Platos
+    platos = models.ManyToManyField(Platos, through='PedidoPlato', related_name='pedidos')
 
     class Meta:
         verbose_name = "Pedido para recoger"
@@ -27,7 +38,6 @@ class Pedidos(models.Model):
 
     def total_precio(self):
         return sum(pedido_plato.plato.precio_plato * pedido_plato.cantidad for pedido_plato in self.pedido_platos.all())
-
 
 class PedidoPlato(models.Model):
     plato = models.ForeignKey(Platos, on_delete=models.CASCADE)
@@ -41,7 +51,6 @@ class PedidoPlato(models.Model):
 
     def __str__(self):
         return f"{self.cantidad} x {self.plato.nombre_plato}"
-
 
 class CatalogoPlatos(models.Model):
     ESTRELLAS = [
@@ -65,4 +74,4 @@ class CatalogoPlatos(models.Model):
 
     @property
     def precio_plato(self):
-        return self.plato.precio_plato  # Obtener el precio del plato relacionado
+        return self.plato.precio_plato
