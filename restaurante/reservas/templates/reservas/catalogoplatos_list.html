@@ -4,7 +4,7 @@
         {% for plato in object_list %}
             <li>
                 <strong>Plato:</strong> {{ plato.plato }}<br>
-                <strong>Precio:</strong> ${{ plato.precio_plato }}<br>
+                <strong>Precio:</strong> {{ plato.precio_plato }}€<br>
                 <strong>Valoración:</strong> {{ plato.get_valoracion_display }}<br>
                 {% if plato.comentarios %}
                     <strong>Comentarios:</strong> {{ plato.comentarios }}<br>

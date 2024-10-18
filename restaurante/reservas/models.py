@@ -3,7 +3,51 @@ from django.db import models
 class Perfil(models.Model):
     nombre_per = models.CharField(max_length=50)
 
+class Tipo_comida(models.Model):
+    tipo_comida = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Tipo comida"
+        verbose_name_plural = "Tipos de comidas"
+
+    def __str__(self):
+        return self.tipo_comida
+
+class Tipo_ingrediente(models.Model):
+    tipo_ingrediente = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Tipo ingrediente"
+        verbose_name_plural = "Tipos de ingredientes"
+
+    def __str__(self):
+        return self.tipo_ingrediente
+
+class Tipo_bebida(models.Model):
+    tipo_bebida = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Tipo bebida"
+        verbose_name_plural = "Tipos de bebidas"
+
+    def __str__(self):
+        return self.tipo_bebida
+
+class Bebidas(models.Model):
+    nom_bebida = models.CharField(max_length=100)
+    precio_bebida = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    tipo_bebi = models.ManyToManyField(Tipo_bebida, related_name='bebidas', blank=True)
+    image = models.ImageField(upload_to='photos/', blank=True)
+
+    class Meta:
+        verbose_name = "Bebida"
+        verbose_name_plural = "Bebidas"
+
+    def __str__(self):
+        return self.nom_bebida
+
 class Ingrediente(models.Model):
+    tipo = models.ForeignKey(Tipo_ingrediente, related_name='ingredientes', on_delete=models.CASCADE, default=1)  # Cambiado el related_name
     nombre_ingrediente = models.CharField(max_length=100)
 
     class Meta:
@@ -15,9 +59,9 @@ class Ingrediente(models.Model):
 
 class Platos(models.Model):
     nombre_plato = models.CharField(max_length=100)
-    precio_plato = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    ingredientes = models.ManyToManyField(Ingrediente, related_name='platos', blank=True)  # Relación con Ingredientes
-
+    precio_plato = models.DecimalField(max_digits=5, decimal_places=2)
+    tipo_comida = models.ForeignKey(Tipo_comida, on_delete=models.CASCADE, default=1)  # Asume que el tipo de comida con ID 1 es el valor predeterminado
+    ingredientes = models.ManyToManyField(Ingrediente)
     class Meta:
         verbose_name = "Plato"
         verbose_name_plural = "Platos"

@@ -1,0 +1,32 @@
+{% load static %} <!-- Cargar los archivos estáticos de Django -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bebidas</title>
+    <!-- Enlazar el archivo CSS -->
+    <link rel="stylesheet" href="{% static 'css/pages.css' %}">
+</head>
+<body>
+
+{% block content %}
+    <h2>Bebidas</h2>
+    <ul>
+        {% for bebida in object_list %}
+            <li>
+                <strong>Bebida:</strong> {{ bebida.nom_bebida }}
+                <strong>Precio:</strong> {{ bebida.precio_bebida }}€
+                <strong>Tipos de bebida:</strong> 
+                {% for tipo in bebida.tipo_bebi.all %}
+                    {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                <strong>Imagen:</strong> <img src="{{ photo.image.url }}">
+            </li><br>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+</body>
+</html>
