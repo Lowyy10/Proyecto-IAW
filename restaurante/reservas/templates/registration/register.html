@@ -1,0 +1,16 @@
+<!-- templates/registration/register.html -->
+{% extends 'base.html' %}
+
+{% block title %}Registrarse{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Registro</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- No necesitas cambiar nada aquí -->
+        <button type="submit" class="button">Registrar</button>
+    </form>
+    <p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Iniciar Sesión</a></p>
+</div>
+{% endblock %}

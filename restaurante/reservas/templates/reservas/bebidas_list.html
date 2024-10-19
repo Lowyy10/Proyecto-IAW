@@ -1,32 +1,26 @@
-{% load static %} <!-- Cargar los archivos estáticos de Django -->
+{% extends 'base.html' %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bebidas</title>
-    <!-- Enlazar el archivo CSS -->
-    <link rel="stylesheet" href="{% static 'css/pages.css' %}">
-</head>
-<body>
+{% block title %}Página de Inicio{% endblock %}
 
 {% block content %}
-    <h2>Bebidas</h2>
-    <ul>
-        {% for bebida in object_list %}
-            <li>
-                <strong>Bebida:</strong> {{ bebida.nom_bebida }}
-                <strong>Precio:</strong> {{ bebida.precio_bebida }}€
-                <strong>Tipos de bebida:</strong> 
-                {% for tipo in bebida.tipo_bebi.all %}
-                    {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-                <strong>Imagen:</strong> <img src="{{ photo.image.url }}">
-            </li><br>
-        {% endfor %}
-    </ul>
-{% endblock %}
 
-</body>
-</html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}">
+
+<h2>Bebidas</h2>
+<ul style="text-align: left;">  <!-- Alinea el contenido de la lista a la izquierda -->
+    {% for bebida in object_list %}
+        
+            <strong>Bebida:</strong> {{ bebida.nom_bebida }}<br>
+            <strong>Precio:</strong> {{ bebida.precio_bebida }}€<br>
+            <strong>Tipos de bebida:</strong> 
+            {% for tipo in bebida.tipo_bebi.all %}
+                {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        <br>
+        <br>
+        <br>
+    {% endfor %}
+</ul>
+
+{% endblock %}

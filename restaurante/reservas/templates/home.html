@@ -1,36 +1,49 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Inicio</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
+{% extends 'base.html' %}
 
-<header>
-    <h1>Casa Texas Mexico</h1>
-</header>
+{% block title %}Página de Inicio{% endblock %}
 
-<nav>
-    <ul>
-        {% comment %} <li><a href="{% url 'platos_list' %}">Ver Platos</a></li> {% endcomment %}
-        <li><a href="{% url 'catalogo_platos_list' %}">Ver Catálogo de Platos</a></li>
-        <li><a href="{% url 'bebidas_list' %}">Ver Bebidas</a></li>
-        <li><a href="{% url 'platos_list' %}">Ver Platos</a></li>
-        {% comment %} <li><a href="{% url 'pedidos_list' %}">Ver Pedidos</a></li> {% endcomment %}
+{% block content %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
     </ul>
-</nav>
+{% endif %}
 
-<main>
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgpMFptFAZtXdFkTOif8oM9aoVs_WfRzbq4Q&s"width="400" height="400">
+<main class="image-container">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgpMFptFAZtXdFkTOif8oM9aoVs_WfRzbq4Q&s" width="500" height="500" class="center-image">
+
+    <div class="button-container">
+        <a href="{% url 'register' %}" class="button">Registrarse</a>
+        <a href="{% url 'login' %}" class="button">Iniciar Sesión</a>
+    </div>
 </main>
 
-<footer>
-    <p>&copy; 2024 Mi Restaurante Casa Texas Mexico.</p>
-</footer>
+<style>
+    .image-container {
+        display: flex; /* Usar flexbox para alinear elementos */
+        align-items: center; /* Centrar verticalmente */
+    }
+    
+    .button-container {
+        margin-left: 20px; /* Espacio entre la imagen y los botones */
+    }
 
-</body>
-</html>
+    .button {
+        display: inline-block; /* Para que los botones se vean como bloques */
+        padding: 10px 20px; /* Espaciado interno del botón */
+        margin-bottom: 10px; /* Espacio entre botones */
+        background-color: #007BFF; /* Color de fondo */
+        color: white; /* Color del texto */
+        text-decoration: none; /* Sin subrayado */
+        border-radius: 5px; /* Bordes redondeados */
+    }
+
+    .button:hover {
+        background-color: #0056b3; /* Color al pasar el ratón */
+    }
+</style>
+
+{% endblock %}

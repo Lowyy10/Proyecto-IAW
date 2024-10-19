@@ -1,4 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Página de Inicio{% endblock %}
+
 {% block content %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}">
     <h2>Platos</h2>
     <ul>
         {% for plato in object_list %}
