@@ -1,7 +1,0 @@
-<!-- confirm_logout.html -->
-<h2>¿Estás seguro de que deseas cerrar sesión?</h2>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Sí, cerrar sesión</button>
-    <a href="{% url 'home' %}">Cancelar</a>
-</form>

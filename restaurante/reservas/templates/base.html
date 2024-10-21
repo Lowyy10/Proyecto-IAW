@@ -11,29 +11,8 @@
 </head>
 <body>
     <header>
-        <h1>Casa Texas Mexico</h1>
-
-            <p>Hola, {{ user.username }}!</p>
-            {% comment %} <a href="{% url 'login' %}">Iniciar Sesión</a>
-            <a href="{% url 'register' %}">Registrarse</a> {% endcomment %}
-    </header>
-    <br>
-    <div class="container">
-        <main class="content">
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            {% block content %}
-            <!-- Contenido específico -->
-            {% endblock %}
-        </main>
-
-        <!-- Menú desplegable a la derecha -->
-        <div class="dropdown">
+        <!-- Botón de Menú (A la izquierda) -->
+        <div class="dropdown menu-dropdown">
             <button class="dropbtn">Menú</button>
             <div class="dropdown-content">
                 <a href="{% url 'catalogo_platos_list' %}">Catálogo de Platos</a>
@@ -41,6 +20,36 @@
                 <a href="{% url 'platos_list' %}">Platos</a>
             </div>
         </div>
-    </div>
+
+        <h1>Casa Texas Mexico</h1>
+
+        {% if user.is_authenticated %}
+            <p>Hola, {{ user.username }}!</p>
+            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="nav-link btn btn-link" style="padding: 0; margin: 0; background: none; border: none; color: inherit; text-decoration: none;">
+                    Cerrar Sesión
+                </button>
+            </form>
+        {% else %}
+            <div class="auth-buttons">
+                <a href="{% url 'login' %}" class="auth-link">Iniciar Sesión</a>
+                <a href="{% url 'register' %}" class="auth-link">Registro</a>
+            </div>
+        {% endif %}
+    </header>
+
+    <main class="content">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}
+        <!-- Contenido específico -->
+        {% endblock %}
+    </main>
 </body>
 </html>

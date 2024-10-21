@@ -1,10 +1,14 @@
 from reservas.models import Platos, CatalogoPlatos, Pedidos, Bebidas
-from django.views.generic import ListView, TemplateView
-from django.http import HttpResponse
-from django.shortcuts import render
-from .models import Bebidas, Tipo_bebida
+from django.views.generic import ListView, TemplateView, FormView
+from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib import messages
 
+# Vistas para mostrar listas de objetos
 class PlatosListView(ListView):
     model = Platos
 
@@ -21,41 +25,28 @@ class PedidosListView(ListView):
 class HomeView(TemplateView):
     template_name = 'home.html'
 
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
-from django.contrib.auth import login
-from django.contrib import messages
-from django.contrib.auth.views import LogoutView
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib.auth import logout
+# Vista para iniciar sesión
+class IniciarSesion(LoginView):
+    template_name = 'registration/login.html'
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('home')  # Redirige a la página de inicio tras iniciar sesión correctamente
 
-@login_required
-def confirm_logout(request):
-    if request.method == 'POST':
-        logout(request)  # Cierra la sesión
-        return redirect('home')  # Redirige a la página de inicio
-    return render(request, 'confirm_logout.html')
+    def form_valid(self, form):
+        user = form.get_user()
+        login(self.request, user)
+        return super().form_valid(form)
 
-def register(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Iniciar sesión después del registro
-            messages.success(request, f'Bienvenido {user.username}, has sido registrado con éxito.')
-            return redirect('home')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+# Vista para registrarse
+class RegistroUsuario(FormView):
+    template_name = 'registration/register.html'
+    form_class = CustomUserCreationForm  # Usa tu formulario personalizado o el de Django
+    success_url = reverse_lazy('login')  # Redirige al login tras el registro exitoso
 
+    def form_valid(self, form):
+        user = form.save()  # Guarda el nuevo usuario
+        login(self.request, user)  # Inicia sesión automáticamente después del registro (opcional)
+        return super().form_valid(form)
 
-def login_view(request):
-    if request.method == 'POST':
-        form = CustomAuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            messages.success(request, f'Bienvenido de nuevo, {form.get_user().username}.')
-            return redirect('home')
-    else:
-        form = CustomAuthenticationForm()
-    return render(request, 'registration/login.html', {'form': form})
+# Vista para cerrar sesión
+class CerrarSesion(LogoutView):
+    next_page = 'home'  # Redirige a la página de inicio tras cerrar sesión

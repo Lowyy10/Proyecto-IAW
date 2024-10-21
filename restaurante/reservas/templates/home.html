@@ -3,48 +3,27 @@
 {% block title %}Página de Inicio{% endblock %}
 
 {% block content %}
-
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
 <main class="image-container">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgpMFptFAZtXdFkTOif8oM9aoVs_WfRzbq4Q&s" width="500" height="500" class="center-image">
-
-    <div class="button-container">
-        <a href="{% url 'login' %}" class="button">Iniciar Sesión</a>
-        <br>
-        <a href="{% url 'register' %}" class="button">Registrarse</a>
-    </div>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgpMFptFAZtXdFkTOif8oM9aoVs_WfRzbq4Q&s" width="500" height="500" class="center">
 </main>
+{% endblock %}
 
-<style>
-    .image-container {
-        display: flex; /* Usar flexbox para alinear elementos */
-        align-items: center; /* Centrar verticalmente */
-    }
-    
-    .button-container {
-        margin-left: 20px; /* Espacio entre la imagen y los botones */
-    }
-
-    .button {
-        display: inline-block; /* Para que los botones se vean como bloques */
-        padding: 10px 20px; /* Espaciado interno del botón */
-        margin-bottom: 10px; /* Espacio entre botones */
-        background-color: #007BFF; /* Color de fondo */
-        color: white; /* Color del texto */
-        text-decoration: none; /* Sin subrayado */
-        border-radius: 5px; /* Bordes redondeados */
-    }
-
-    .button:hover {
-        background-color: #0056b3; /* Color al pasar el ratón */
-    }
-</style>
-
+{% block navbar %}
+    {% if user.is_authenticated %}
+        <li class="nav-item" style="display: flex; align-items: center;">
+            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="nav-link btn btn-link" style="padding: 0; margin: 0; background: none; border: none; color: inherit; text-decoration: none;">
+                    Cerrar Sesión
+                </button>
+            </form>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
+        </li>
+    {% endif %}
 {% endblock %}

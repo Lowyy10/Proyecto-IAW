@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Página de Inicio{% endblock %}
+{% block title %}Bebidas{% endblock %}
 
 {% block content %}
 
@@ -8,18 +8,25 @@
 <link rel="stylesheet" href="{% static 'css/pages.css' %}">
 
 <h2>Bebidas</h2>
-<ul style="text-align: left;">  <!-- Alinea el contenido de la lista a la izquierda -->
+<ul style="text-align: left;">
     {% for bebida in object_list %}
-        
-            <strong>Bebida:</strong> {{ bebida.nom_bebida }}<br>
-            <strong>Precio:</strong> {{ bebida.precio_bebida }}€<br>
-            <strong>Tipos de bebida:</strong> 
-            {% for tipo in bebida.tipo_bebi.all %}
-                {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        <br>
-        <br>
-        <br>
+        <li style="list-style: none; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <strong>Bebida:</strong> {{ bebida.nom_bebida }}<br>
+                    <strong>Precio:</strong> {{ bebida.precio_bebida }}€<br>
+                    <strong>Tipos de bebida:</strong> 
+                    {% for tipo in bebida.tipo_bebi.all %}
+                        {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+                {% if bebida.image %}
+                    <img src="{{ bebida.image.url }}" alt="{{ bebida.nom_bebida }}" style="max-width: 200px; max-height: 200px; margin-left: 10px;">
+                {% else %}
+                    <p style="margin-left: 10px;">No hay imagen disponible</p>
+                {% endif %}
+            </div>
+        </li>
     {% endfor %}
 </ul>
 

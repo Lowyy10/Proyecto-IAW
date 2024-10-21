@@ -4,13 +4,12 @@
 {% block title %}Registrarse{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <h2>Registro</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}  <!-- No necesitas cambiar nada aquí -->
-        <button type="submit" class="button">Registrar</button>
+<div class="container"> <!--contenedor para centrar el contenido en la pagina -->
+    <h2>Registrarse</h2> <!--titulo para la sección de registro -->
+    <form method="post"><!--formulario para enviar datos de registro usando método POST -->
+        {% csrf_token %} <!--token de protección CSRF para el formulario -->
+        {{ form.as_p }} <!--renderiza el formulario de registro como parrafos -->
+        <button type="submit" class="btn btn-primary">Registrarse</button> <!-- boto de envío del formulario -->
     </form>
-    <p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Iniciar Sesión</a></p>
 </div>
 {% endblock %}
