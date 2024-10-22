@@ -1,14 +1,19 @@
-from reservas.models import Platos, CatalogoPlatos, Pedidos, Bebidas
-from django.views.generic import ListView, TemplateView, FormView
+from reservas.models import Platos, CatalogoPlatos, Pedidos, Bebidas,PedidoPlato
+from django.views.generic import FormView,ListView, TemplateView, FormView, ListView, CreateView
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .forms import CustomUserCreationForm, PedidoForm,CustomAuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.views import LogoutView, LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 # Vistas para mostrar listas de objetos
+class CrearPedidoView(CreateView):
+    model = PedidoPlato
+    fields = ["plato", "cantidad", "observaciones"]  #esto hay que importarlo
+
 class PlatosListView(ListView):
     model = Platos
 
@@ -19,8 +24,10 @@ class BebidasListView(ListView):
 class CatalogoPlatosListView(ListView):
     model = CatalogoPlatos
 
-class PedidosListView(ListView):
+class PedidosListView(LoginRequiredMixin, ListView):
     model = Pedidos
+    login_url = 'login'
+    redirect_field_name = 'pedidos'
 
 class HomeView(TemplateView):
     template_name = 'home.html'

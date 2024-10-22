@@ -31,3 +31,10 @@ class CustomAuthenticationForm(AuthenticationForm):
         widgets = {
             'password': forms.PasswordInput(attrs={'placeholder': 'Introduce tu contraseña'}),
         }
+from django import forms
+from .models import Pedidos, PedidoPlato, Platos
+
+class PedidoForm(forms.ModelForm):
+    class Meta:
+        model = PedidoPlato
+        fields=['plato', 'cantidad', 'observaciones']

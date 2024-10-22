@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Perfil(models.Model):
     nombre_per = models.CharField(max_length=50)
@@ -68,6 +69,9 @@ class Platos(models.Model):
 
     def __str__(self):
         return self.nombre_plato
+
+class EstadoPedido(models.Model):
+    estado = models.CharField(max_length=20)
 
 class Pedidos(models.Model):
     nombre_persona = models.CharField(max_length=50)
