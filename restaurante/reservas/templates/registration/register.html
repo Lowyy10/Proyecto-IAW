@@ -4,12 +4,16 @@
 {% block title %}Registrarse{% endblock %}
 
 {% block content %}
-<div class="container"> <!--contenedor para centrar el contenido en la pagina -->
-    <h2>Registrarse</h2> <!--titulo para la sección de registro -->
-    <form method="post"><!--formulario para enviar datos de registro usando método POST -->
-        {% csrf_token %} <!--token de protección CSRF para el formulario -->
-        {{ form.as_p }} <!--renderiza el formulario de registro como parrafos -->
-        <button type="submit" class="btn btn-primary">Registrarse</button> <!-- boto de envío del formulario -->
+<br>
+<br>
+<br>
+<div class="form-container"> <!--contenedor para centrar el contenido en la página -->
+    <h2>Registrarse</h2>
+    <form method="post">
+        {% csrf_token %} <!-- Protección CSRF -->
+        {{ form.as_p }} <!-- Formulario de registro de Django -->
+        <button type="submit" class="button">Registrarse</button> <!-- Botón de envío -->
     </form>
+    <p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Iniciar Sesión</a></p> <!-- Enlace para iniciar sesión -->
 </div>
 {% endblock %}
