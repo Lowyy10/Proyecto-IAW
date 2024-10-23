@@ -32,9 +32,12 @@ class CustomAuthenticationForm(AuthenticationForm):
             'password': forms.PasswordInput(attrs={'placeholder': 'Introduce tu contraseña'}),
         }
 from django import forms
-from .models import Pedidos, PedidoPlato, Platos
+from .models import MisPedidos
 
-class PedidoForm(forms.ModelForm):
+class MisPedidosForm(forms.ModelForm):
     class Meta:
-        model = PedidoPlato
-        fields=['plato', 'cantidad', 'observaciones']
+        model = MisPedidos
+        fields = ['nombre_persona', 'plato', 'cantidad', 'observaciones']
+        widgets = {
+            'observaciones': forms.Textarea(attrs={'rows': 3}),
+        }

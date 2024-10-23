@@ -6,26 +6,25 @@
     <h2 class="text-center mb-4">Mis Pedidos</h2>
     <div class="container">
         <div class="row">
-            {% if mis_pedidos %}
-                {% for pedido in mis_pedidos %}
+            {% if mispedidos_list %}
+                {% for pedido in mispedidos_list %}
                     <div class="col-md-4 mb-4">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Pedido ID: {{ pedido.id }}</h5>
-                                <p><strong>Estado:</strong> {{ pedido.estado }}</p> <!-- Ajusta según el campo estado -->
-                                <p><strong>Fecha:</strong> {{ pedido.fecha_creacion }}</p> <!-- Cambia a tu campo de fecha -->
-                                <h6>Detalles de los Platos:</h6>
+                                <p><strong>Nombre:</strong> {{ pedido.nombre_persona }}</p>
+                                <p><strong>Cantidad:</strong> {{ pedido.cantidad }}</p>
+                                <p><strong>Fecha:</strong> {{ pedido.fecha_pedido }}</p>
+                                <h6>Detalles del Plato:</h6>
                                 <ul>
-                                    {% for pedido_plato in pedido.pedido_platos.all %}
-                                        <li>
-                                            {{ pedido_plato.cantidad }} x {{ pedido_plato.plato.nombre }}
-                                            {% if pedido_plato.observaciones %}
-                                                <br><small>Observaciones: {{ pedido_plato.observaciones }}</small>
-                                            {% endif %}
-                                        </li>
-                                    {% endfor %}
+                                    <li>
+                                        {{ pedido.cantidad }} x {{ pedido.plato.nombre_plato }}
+                                        {% if pedido.observaciones %}
+                                            <br><small>Observaciones: {{ pedido.observaciones }}</small>
+                                        {% endif %}
+                                    </li>
                                 </ul>
-                                <a href="{% url 'pedido_detalle' pedido.pk %}" class="btn btn-primary">Ver detalles</a>
+                                <p><strong>Precio Total:</strong> ${{ pedido.total_precio }}</p>
                             </div>
                         </div>
                     </div>

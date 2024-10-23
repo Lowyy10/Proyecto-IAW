@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h2 class="text-center mb-4">Crear Pedido</h2>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nombre_persona" class="form-label">Nombre:</label>
+                {{ form.nombre_persona|as_widget(attrs={'class': 'form-control'}) }}
+            </div>
+            <div class="mb-3">
+                <label for="plato" class="form-label">Plato:</label>
+                {{ form.plato|as_widget(attrs={'class': 'form-select'}) }}
+            </div>
+            <div class="mb-3">
+                <label for="cantidad" class="form-label">Cantidad:</label>
+                {{ form.cantidad|as_widget(attrs={'class': 'form-control'}) }}
+            </div>
+            <div class="mb-3">
+                <label for="observaciones" class="form-label">Observaciones:</label>
+                {{ form.observaciones|as_widget(attrs={'class': 'form-control'}) }}
+            </div>
+            <button type="submit" class="btn btn-primary">Crear Pedido</button>
+        </form>
+    </div>
+{% endblock %}

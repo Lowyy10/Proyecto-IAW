@@ -73,32 +73,22 @@ class Platos(models.Model):
 class EstadoPedido(models.Model):
     estado = models.CharField(max_length=20)
 
-class Pedidos(models.Model):
+class MisPedidos(models.Model):
     nombre_persona = models.CharField(max_length=50)
-    platos = models.ManyToManyField(Platos, through='PedidoPlato', related_name='pedidos')
+    plato = models.ForeignKey(Platos, on_delete=models.CASCADE)  # Relaciona el pedido directamente con un plato
+    cantidad = models.PositiveIntegerField(default=1)
+    observaciones = models.TextField(blank=True, null=True)
+    fecha_pedido = models.DateTimeField(auto_now_add=True)  # Registra automáticamente la fecha del pedido
 
     class Meta:
         verbose_name = "Pedido para recoger"
         verbose_name_plural = "Pedidos para recoger"
 
     def __str__(self):
-        return f"Pedido de {self.nombre_persona}"
+        return f"{self.cantidad} x {self.plato.nombre_plato} (Pedido de {self.nombre_persona})"
 
     def total_precio(self):
-        return sum(pedido_plato.plato.precio_plato * pedido_plato.cantidad for pedido_plato in self.pedido_platos.all())
-
-class PedidoPlato(models.Model):
-    plato = models.ForeignKey(Platos, on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField(default=1)
-    observaciones = models.TextField(blank=True, null=True)
-    pedido = models.ForeignKey(Pedidos, related_name='pedido_platos', on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "Plato en Pedido"
-        verbose_name_plural = "Platos en Pedido"
-
-    def __str__(self):
-        return f"{self.cantidad} x {self.plato.nombre_plato}"
+        return self.plato.precio_plato * self.cantidad
 
 class CatalogoPlatos(models.Model):
     ESTRELLAS = [
