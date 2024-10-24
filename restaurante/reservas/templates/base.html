@@ -19,7 +19,7 @@
                 <a href="{% url 'bebidas_list' %}">Bebidas</a>
                 <a href="{% url 'platos_list' %}">Platos</a>
                 {% if user.is_authenticated %}
-                    <a href="{% url '' %}">Hacer Pedido</a>
+                    <a href="{% url 'crearpedido_list' %}">Hacer Pedido</a>
                     <a href="{% url 'mispedidos_list' %}">Pedidos</a>
                 {% endif %}
             </div>

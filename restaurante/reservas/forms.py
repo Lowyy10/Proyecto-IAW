@@ -39,5 +39,8 @@ class MisPedidosForm(forms.ModelForm):
         model = MisPedidos
         fields = ['nombre_persona', 'plato', 'cantidad', 'observaciones']
         widgets = {
-            'observaciones': forms.Textarea(attrs={'rows': 3}),
+            'nombre_persona': forms.TextInput(attrs={'class': 'form-control'}),
+            'plato': forms.Select(attrs={'class': 'form-select'}),
+            'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
+            'observaciones': forms.Textarea(attrs={'class': 'form-control'}),
         }
