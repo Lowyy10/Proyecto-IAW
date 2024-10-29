@@ -1,0 +1,9 @@
+<!-- templates/ver_perfil.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Perfil de {{ perfil.user.username }}</h2>
+<p>Biografía: {{ perfil.bio }}</p>
+<p>Teléfono: {{ perfil.tel }}</p>
+<a href="{% url 'registration/editar_perfil' %}">Editar perfil</a>
+{% endblock %}

@@ -15,7 +15,6 @@
         <div class="dropdown menu-dropdown">
             <button class="dropbtn">Menú</button>
             <div class="dropdown-content">
-                <a href="{% url 'catalogo_platos_list' %}">Catálogo de Platos</a>
                 <a href="{% url 'bebidas_list' %}">Bebidas</a>
                 <a href="{% url 'platos_list' %}">Platos</a>
                 {% if user.is_authenticated %}
@@ -24,39 +23,38 @@
                 {% endif %}
             </div>
         </div>
-    
-        <div class="dropdown menu-dropdown">
-            <button class="dropbtn">Cuenta</button>
-            <div class="dropdown-content">
-                {% comment %} Puedes añadir enlaces relacionados con la cuenta del usuario aquí {% endcomment %}
-                
-                <!-- Botón de Cerrar Sesión -->
-                <form method="POST" action="{% url 'logout' %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="nav-link btn btn-link" style="padding: 12px 16px; margin: 0; background: none; border: none; color: #333; text-decoration: none; display: block; text-align: left; width: 100%;">
-                        Cerrar Sesión
-                    </button>
-                </form>
-            </div>
-        </div>
-        
-
-        <h1>Casa Texas Mexico</h1>
-    </header>
-
         {% if user.is_authenticated %}
-            <p>Hola, {{ user.username }}!</p>
-            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-
-            </form>
-        {% else %}
-            <div class="auth-buttons">
-                <a href="{% url 'login' %}" class="auth-link">Iniciar Sesión</a>
-                <a href="{% url 'register' %}" class="auth-link">Registro</a>
+            <div class="dropdown menu-dropdown">
+                <button class="dropbtn">Cuenta</button>
+                <div class="dropdown-content">
+                    <a href="{% url 'perfil' %}">Perfil</a>
+                    <a href="{% url 'registration/editar_perfil' %}">Editar perfil</a>
+                    <!-- Botón de Cerrar Sesión -->
+                    <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link" style="padding: 12px 16px; margin: 0; background: none; border: none; color: #333; text-decoration: none; display: block; text-align: left; width: 100%;">
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
             </div>
         {% endif %}
+
+        <!-- Hacer que el título sea un enlace a la página de inicio -->
+        <h1><a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">Casa Texas Mexico</a></h1>
     </header>
+
+    {% if user.is_authenticated %}
+        <p>Hola, {{ user.username }}!</p>
+        <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+        </form>
+    {% else %}
+        <div class="auth-buttons">
+            <a href="{% url 'login' %}" class="auth-link">Iniciar Sesión</a>
+            <a href="{% url 'register' %}" class="auth-link">Registro</a>
+        </div>
+    {% endif %}
 
     <main class="content">
         {% if messages %}

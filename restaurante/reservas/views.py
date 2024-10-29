@@ -1,16 +1,19 @@
-from reservas.models import Platos, CatalogoPlatos, Bebidas, MisPedidos
+from reservas.models import Platos, Bebidas, MisPedidos, Perfil
 from django.views.generic import FormView,ListView, TemplateView, FormView, ListView, CreateView, FormView
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm,MisPedidosForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import CustomUserCreationForm,MisPedidosForm,PerfilForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.generic import CreateView
+from django.views.generic.edit import DeleteView
+from django.contrib.auth.decorators import login_required
 
 # Vistas para mostrar listas de objetos
+
 class MisPedidosCreateView(CreateView):
     model = MisPedidos
     form_class = MisPedidosForm
@@ -20,7 +23,11 @@ class MisPedidosCreateView(CreateView):
     def form_valid(self, form):
         # Aquí puedes agregar lógica adicional si es necesario
         return super().form_valid(form)
-    
+
+class PedidoDeleteView(DeleteView):
+    model = MisPedidos
+    success_url = reverse_lazy("mispedidos_list")
+
 class CrearPedidoView(CreateView):
     model = MisPedidos
     form_class = MisPedidosForm
@@ -38,8 +45,6 @@ class BebidasListView(ListView):
     model = Bebidas
     context_object_name = 'photos'
 
-class CatalogoPlatosListView(ListView):
-    model = CatalogoPlatos
 
 class MisPedidosListView(LoginRequiredMixin, ListView):
     model = MisPedidos
@@ -77,3 +82,22 @@ class RegistroUsuario(FormView):
 # Vista para cerrar sesión
 class CerrarSesion(LogoutView):
     next_page = 'home'  # Redirige a la página de inicio tras cerrar sesión
+
+@login_required
+def editar_perfil(request):
+    perfil = get_object_or_404(Perfil, user=request.user)
+
+    if request.method == 'POST':
+        form = PerfilForm(request.POST, instance=perfil)
+        if form.is_valid():
+            form.save()
+            return redirect('home')  # Redirige a una página que muestre el perfil actualizado
+    else:
+        form = PerfilForm(instance=perfil)
+
+    return render(request, 'registration/editar_perfil.html', {'form': form})
+
+@login_required
+def ver_perfil(request):
+    perfil = Perfil.objects.get(user=request.user)
+    return render(request, 'registration/ver_perfil.html', {'perfil': perfil})

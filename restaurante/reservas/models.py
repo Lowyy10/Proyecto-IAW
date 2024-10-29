@@ -2,7 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Perfil(models.Model):
-    nombre_per = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True)
+    tel = models.CharField(max_length=20, blank=True, null=True)
+    
 
 class Tipo_comida(models.Model):
     tipo_comida = models.CharField(max_length=100)
@@ -59,10 +62,21 @@ class Ingrediente(models.Model):
         return self.nombre_ingrediente
 
 class Platos(models.Model):
+    ESTRELLAS = [
+        (0, '☆☆☆☆☆'),
+        (1, '★☆☆☆☆'),
+        (2, '★★☆☆☆'),
+        (3, '★★★☆☆'),
+        (4, '★★★★☆'),
+        (5, '★★★★★'),
+    ]
     nombre_plato = models.CharField(max_length=100)
     precio_plato = models.DecimalField(max_digits=5, decimal_places=2)
     tipo_comida = models.ForeignKey(Tipo_comida, on_delete=models.CASCADE, default=1)  # Asume que el tipo de comida con ID 1 es el valor predeterminado
     ingredientes = models.ManyToManyField(Ingrediente)
+    valoracion = models.IntegerField(choices=ESTRELLAS, default=0)
+    comentarios = models.TextField(blank=True, null=True)
+
     class Meta:
         verbose_name = "Plato"
         verbose_name_plural = "Platos"
@@ -89,26 +103,6 @@ class MisPedidos(models.Model):
 
     def total_precio(self):
         return self.plato.precio_plato * self.cantidad
-
-class CatalogoPlatos(models.Model):
-    ESTRELLAS = [
-        (0, '☆☆☆☆☆'),
-        (1, '★☆☆☆☆'),
-        (2, '★★☆☆☆'),
-        (3, '★★★☆☆'),
-        (4, '★★★★☆'),
-        (5, '★★★★★'),
-    ]
-    plato = models.ForeignKey(Platos, on_delete=models.CASCADE, related_name='catalogo_platos')
-    valoracion = models.IntegerField(choices=ESTRELLAS, default=0)
-    comentarios = models.TextField(blank=True, null=True)
-
-    class Meta:
-        verbose_name = "Catálogo de Plato"
-        verbose_name_plural = "Catálogo de Platos"
-
-    def __str__(self):
-        return f"{self.plato.nombre_plato} - {self.valoracion} estrellas"
 
     @property
     def precio_plato(self):

@@ -10,9 +10,15 @@
     <ul>
         {% for plato in object_list %}
             <li>
-                <strong>Plato:</strong> {{ plato.nombre_plato }}
-                <strong></strong> ${{ plato.precio_plato }}<br>
-                <!-- Añade aquí más campos si los tienes -->
+                <strong>Plato:</strong> {{ plato.nombre_plato }}<br>
+                <strong>Precio:</strong> {{ plato.precio_plato }}€<br>
+                <strong>Ingredientes:</strong>
+                <ul>
+                    {% for ingrediente in plato.ingredientes.all %}
+                        <li>-{{ ingrediente.nombre_ingrediente }}</li>
+                    {% endfor %}
+                </ul>
+                <br>
             </li>
         {% endfor %}
     </ul>

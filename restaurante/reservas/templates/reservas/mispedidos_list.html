@@ -6,25 +6,30 @@
     <h2 class="text-center mb-4">Mis Pedidos</h2>
     <div class="container">
         <div class="row">
-            {% if mispedidos_list %}
-                {% for pedido in mispedidos_list %}
+            {% if object_list %}
+                {% for pedido in object_list %}
                     <div class="col-md-4 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Pedido ID: {{ pedido.id }}</h5>
+                                <h2 class="card-title">Pedido ID: {{ pedido.id }}</h2>
                                 <p><strong>Nombre:</strong> {{ pedido.nombre_persona }}</p>
                                 <p><strong>Cantidad:</strong> {{ pedido.cantidad }}</p>
                                 <p><strong>Fecha:</strong> {{ pedido.fecha_pedido }}</p>
-                                <h6>Detalles del Plato:</h6>
+                                <h3>Detalles del Plato:</h3>
                                 <ul>
                                     <li>
                                         {{ pedido.cantidad }} x {{ pedido.plato.nombre_plato }}
                                         {% if pedido.observaciones %}
-                                            <br><small>Observaciones: {{ pedido.observaciones }}</small>
+                                            <br><strong>Observaciones: {{ pedido.observaciones }}</strong>
                                         {% endif %}
                                     </li>
                                 </ul>
                                 <p><strong>Precio Total:</strong> ${{ pedido.total_precio }}</p>
+                                <!-- Botón de eliminación -->
+                                <form action="{% url 'pedido_eliminar' pedido.id %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
                             </div>
                             <br>
                         </div>
