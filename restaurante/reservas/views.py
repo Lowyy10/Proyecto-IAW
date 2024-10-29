@@ -1,8 +1,8 @@
-from reservas.models import Platos, Bebidas, MisPedidos, Perfil
-from django.views.generic import FormView,ListView, TemplateView, FormView, ListView, CreateView, FormView
+from reservas.models import Platos, Bebidas, MisPedidos, Perfil,Valoracion
+from django.views.generic import FormView,View,ListView, TemplateView, FormView, ListView, CreateView, FormView
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomUserCreationForm,MisPedidosForm,PerfilForm
+from .forms import CustomUserCreationForm,MisPedidosForm,PerfilForm,ValoracionForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.views import LogoutView, LoginView
@@ -10,7 +10,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.generic import CreateView
 from django.views.generic.edit import DeleteView
+from django.db import models
 from django.contrib.auth.decorators import login_required
+
 
 # Vistas para mostrar listas de objetos
 
@@ -41,9 +43,47 @@ class CrearPedidoView(CreateView):
 class PlatosListView(ListView):
     model = Platos
 
+class ValoracionEliminarView(View):
+    def post(self, request, *args, **kwargs):
+        valoracion_id = kwargs.get('valoracion_id')
+        # Obtén la valoración, asegurándote de que pertenezca al usuario actual
+        valoracion = get_object_or_404(Valoracion, id=valoracion_id, usuario=request.user)
+        valoracion.delete()  # Elimina la valoración
+        return redirect('bebidas_list')
+    
 class BebidasListView(ListView):
     model = Bebidas
     context_object_name = 'photos'
+    template_name = 'tu_template_de_bebidas.html'  # Asegúrate de especificar el nombre correcto de tu plantilla
+
+    def post(self, request, *args, **kwargs):
+        bebida_id = request.POST.get('bebida_id')
+        bebida = get_object_or_404(Bebidas, id=bebida_id)
+        valoracion_form = ValoracionForm(request.POST)
+
+        if valoracion_form.is_valid():
+            Valoracion.objects.update_or_create(
+                bebida=bebida,
+                usuario=request.user,
+                defaults={'valoracion': valoracion_form.cleaned_data['valoracion']}
+            )
+            return redirect('bebidas_list')
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['valoracion_form'] = ValoracionForm()
+        for bebida in context['photos']:
+            # Calcular la media de las valoraciones
+            valoraciones = bebida.valoraciones.all()
+            if valoraciones.exists():
+                media_valoracion = valoraciones.aggregate(models.Avg('valoracion'))['valoracion__avg']
+                bebida.media_valoracion = round(media_valoracion, 2)  # Redondear a dos decimales
+            else:
+                bebida.media_valoracion = 0  # Sin valoraciones, media es 0
+        return context
+
 
 
 class MisPedidosListView(LoginRequiredMixin, ListView):

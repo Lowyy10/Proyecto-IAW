@@ -38,6 +38,15 @@ class Tipo_bebida(models.Model):
         return self.tipo_bebida
 
 class Bebidas(models.Model):
+    ESTRELLAS = [
+        (0, '☆☆☆☆☆'),
+        (1, '★☆☆☆☆'),
+        (2, '★★☆☆☆'),
+        (3, '★★★☆☆'),
+        (4, '★★★★☆'),
+        (5, '★★★★★'),
+    ]
+    valoracion = models.IntegerField(choices=ESTRELLAS, default=0)
     nom_bebida = models.CharField(max_length=100)
     precio_bebida = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     tipo_bebi = models.ManyToManyField(Tipo_bebida, related_name='bebidas', blank=True)
@@ -49,6 +58,17 @@ class Bebidas(models.Model):
 
     def __str__(self):
         return self.nom_bebida
+    
+class Valoracion(models.Model):
+    bebida = models.ForeignKey(Bebidas, on_delete=models.CASCADE, related_name='valoraciones')
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    valoracion = models.IntegerField(choices=Bebidas.ESTRELLAS)
+
+    class Meta:
+        unique_together = ('bebida', 'usuario')  # Evitar que un usuario valore la misma bebida más de una vez
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.bebida.nom_bebida} - {self.valoracion} estrellas"
 
 class Ingrediente(models.Model):
     tipo = models.ForeignKey(Tipo_ingrediente, related_name='ingredientes', on_delete=models.CASCADE, default=1)  # Cambiado el related_name
@@ -107,3 +127,4 @@ class MisPedidos(models.Model):
     @property
     def precio_plato(self):
         return self.plato.precio_plato
+    

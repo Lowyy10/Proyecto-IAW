@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Perfil
+from .models import Perfil, Valoracion
 
 class PerfilForm(forms.ModelForm):
     class Meta:
@@ -50,3 +50,14 @@ class MisPedidosForm(forms.ModelForm):
             'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
             'observaciones': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
+#Valoraciones
+
+class ValoracionForm(forms.ModelForm):
+    class Meta:
+        model = Valoracion
+        fields = ['valoracion']  # Solo necesitas el campo de valoración
+
+    def __init__(self, *args, **kwargs):
+        super(ValoracionForm, self).__init__(*args, **kwargs)
+        self.fields['valoracion'].widget.attrs.update({'class': 'valoracion-select'})

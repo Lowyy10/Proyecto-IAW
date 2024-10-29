@@ -1,5 +1,5 @@
 from django.urls import path
-from reservas.views import PlatosListView, PedidoDeleteView ,ver_perfil,editar_perfil, MisPedidosCreateView, MisPedidosListView, CrearPedidoView, BebidasListView,LogoutView, IniciarSesion, RegistroUsuario, CerrarSesion
+from reservas.views import PlatosListView, PedidoDeleteView ,ver_perfil,editar_perfil, ValoracionEliminarView,MisPedidosCreateView, MisPedidosListView, CrearPedidoView, BebidasListView,LogoutView, IniciarSesion, RegistroUsuario, CerrarSesion
 from .views import HomeView
 from django.contrib.auth import views as auth_views
 from . import views
@@ -16,6 +16,7 @@ urlpatterns = [
     path('register/', RegistroUsuario.as_view(), name='register'),
     path('editar-perfil/', editar_perfil, name='registration/editar_perfil'),
     path('ver-perfil/', ver_perfil, name='perfil'),
+    path('valoracion/eliminar/<int:valoracion_id>/', ValoracionEliminarView.as_view(), name='valoracion_eliminar'),
 ]
 
 
