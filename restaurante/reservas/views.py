@@ -114,12 +114,27 @@ class IniciarSesion(LoginView):
 class RegistroUsuario(FormView):
     template_name = 'registration/register.html'
     form_class = CustomUserCreationForm  # Usa tu formulario personalizado o el de Django
-    success_url = reverse_lazy('login')  # Redirige al login tras el registro exitoso
+    success_url = reverse_lazy('home')  # Redirige al login tras el registro exitoso
 
     def form_valid(self, form):
         user = form.save()  # Guarda el nuevo usuario
         login(self.request, user)  # Inicia sesión automáticamente después del registro (opcional)
         return super().form_valid(form)
+    
+@login_required
+def eliminar_perfil(request):
+    # Obtén el perfil del usuario que ha iniciado sesión
+    perfil = get_object_or_404(Perfil, user=request.user)
+
+    if request.method == 'POST':
+        # Primero, eliminamos el perfil
+        perfil.delete()
+        # Luego, eliminamos el usuario
+        request.user.delete()
+        messages.success(request, 'Tu cuenta ha sido eliminada con éxito.')
+        return redirect('home')  # Redirige a la página de inicio o a donde desees
+
+    return render(request, 'eliminar_perfil.html', {'perfil': perfil})
 
 # Vista para cerrar sesión
 class CerrarSesion(LogoutView):
@@ -127,16 +142,15 @@ class CerrarSesion(LogoutView):
 
 @login_required
 def editar_perfil(request):
-    perfil = get_object_or_404(Perfil, user=request.user)
-
+    perfil = get_object_or_404(Perfil, user=request.user)  # Obtiene el perfil del usuario autenticado
     if request.method == 'POST':
         form = PerfilForm(request.POST, instance=perfil)
         if form.is_valid():
             form.save()
-            return redirect('home')  # Redirige a una página que muestre el perfil actualizado
+            return redirect('home')  # O redirige a donde desees
     else:
         form = PerfilForm(instance=perfil)
-
+    
     return render(request, 'registration/editar_perfil.html', {'form': form})
 
 @login_required

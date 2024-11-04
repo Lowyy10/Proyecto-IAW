@@ -1,5 +1,5 @@
 from django.urls import path
-from reservas.views import PlatosListView, PedidoDeleteView ,ver_perfil,editar_perfil, ValoracionEliminarView,MisPedidosCreateView, MisPedidosListView, CrearPedidoView, BebidasListView,LogoutView, IniciarSesion, RegistroUsuario, CerrarSesion
+from reservas.views import PlatosListView, PedidoDeleteView ,ver_perfil,editar_perfil, eliminar_perfil,ValoracionEliminarView,MisPedidosCreateView, MisPedidosListView, CrearPedidoView, BebidasListView,LogoutView, IniciarSesion, RegistroUsuario, CerrarSesion
 from .views import HomeView
 from django.contrib.auth import views as auth_views
 from . import views
@@ -15,6 +15,7 @@ urlpatterns = [
     path('login/', IniciarSesion.as_view(), name='login'),
     path('register/', RegistroUsuario.as_view(), name='register'),
     path('registration/editar_perfil/', editar_perfil, name='editar_perfil'),
+    path('registration/eliminar_perfil/', eliminar_perfil, name='eliminar_perfil'),  # Nueva URL para eliminar perfil
     path('registration/ver_perfil.html', ver_perfil, name='perfil'),
     path('valoracion/eliminar/<int:valoracion_id>/', ValoracionEliminarView.as_view(), name='valoracion_eliminar')
 ]

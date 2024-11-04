@@ -28,12 +28,18 @@
                                 {% if bebida.image %}
                                     <div style="position: relative; display: inline-block;">
                                         <img src="{{ bebida.image.url }}" alt="{{ bebida.nom_bebida }}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="document.getElementById('valoracion-form-{{ bebida.id }}').style.display='block'">
-                                        <form id="valoracion-form-{{ bebida.id }}" action="" method="POST" style="display: none;">
-                                            {% csrf_token %}
-                                            {{ valoracion_form.as_p }}
-                                            <input type="hidden" name="bebida_id" value="{{ bebida.id }}">
-                                            <button type="submit" class="btn btn-primary mt-2">Enviar Valoración</button>
-                                        </form>
+                                        
+                                        <!-- Solo mostrar el formulario de valoración si el usuario está autenticado -->
+                                        {% if user.is_authenticated %}
+                                            <form id="valoracion-form-{{ bebida.id }}" action="" method="POST" style="display: none;">
+                                                {% csrf_token %}
+                                                {{ valoracion_form.as_p }}
+                                                <input type="hidden" name="bebida_id" value="{{ bebida.id }}">
+                                                <button type="submit" class="btn btn-primary mt-2">Enviar Valoración</button>
+                                            </form>
+                                        {% else %}
+                                            <p class="text-danger">Inicia sesión para valorar esta bebida.</p>
+                                        {% endif %}
                                     </div>
                                 {% else %}
                                     <p>No hay imagen disponible</p>
@@ -46,7 +52,7 @@
                                         <strong>{{ valoracion.usuario.username }}</strong> - 
                                         {{ valoracion.valoracion }} estrellas
                                         {% if valoracion.usuario == request.user %}
-                                            <form action="{% url 'valoracion_eliminar' valoracion.id %}" method="post" style="display:inline;">
+                                            <form action="{% url 'valoracion_eliminar' valoracion.id %}" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu valoracion? Esta acción no se puede deshacer.');">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-danger btn-sm">Eliminar Valoración</button>
                                             </form>

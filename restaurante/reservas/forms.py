@@ -4,10 +4,26 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Perfil, Valoracion
 
+
 class PerfilForm(forms.ModelForm):
+    username = forms.CharField(max_length=150, required=True, label='Nombre de Usuario')  # Mantén el campo aquí
+
     class Meta:
         model = Perfil
-        fields = ['user', 'bio', 'tel']
+        fields = ['bio', 'tel']  # No incluyas 'username' aquí
+
+    def __init__(self, *args, **kwargs):
+        super(PerfilForm, self).__init__(*args, **kwargs)
+        self.fields['username'].initial = self.instance.user.username
+
+    def save(self, commit=True):
+        perfil = super(PerfilForm, self).save(commit=False)
+        perfil.user.username = self.cleaned_data['username']
+        if commit:
+            perfil.user.save()
+            perfil.save()
+        return perfil
+
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(
@@ -19,7 +35,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2')  # Añade otros campos que desees
+        fields = ('username', 'email' , 'password1', 'password2')  # Añade otros campos que desees
         widgets = {
             'password1': forms.PasswordInput(attrs={'placeholder': 'Introduce tu contraseña'}),
             'password2': forms.PasswordInput(attrs={'placeholder': 'Confirma tu contraseña'}),

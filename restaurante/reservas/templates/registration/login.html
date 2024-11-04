@@ -1,4 +1,3 @@
-<!-- templates/registration/login.html -->
 {% extends 'base.html' %}
 
 {% block title %}Iniciar Sesión{% endblock %}
@@ -6,15 +5,116 @@
 {% block content %}
 <br>
 <br>
-<br>
 <div class="form-container">
-    <h2>Iniciar Sesión</h2>
-    <form method="post" action="{% url 'login' %}">
+    <div class="form-header">
+        <h2>Iniciar Sesión</h2>
+    </div>
+    <form method="post" action="{% url 'login' %}" class="login-form">
         {% csrf_token %}
-        {{ form.non_field_errors }}  <!-- Mostrar errores generales -->
-        {{ form.as_p }}  <!-- Formulario de Django -->
-        <button type="submit" class="button">Iniciar Sesión</button>
+        {{ form.non_field_errors }}
+        <div class="form-group">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+        </div>
+        <button type="submit" class="btn-submit">Iniciar Sesión</button>
     </form>
-    <p>¿No tienes cuenta? <a href="{% url 'register' %}">Registrarse</a></p>
+    <p class="register-link">¿No tienes cuenta? <a href="{% url 'register' %}">Registrarse</a></p>
 </div>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+        border: 3px solid #BC4E4A; /* Borde color naranja vibrante */
+        text-align: center;
+    }
+
+    .form-header h2 {
+        margin-bottom: 20px;
+        color: #c62828; /* Rojo mexicano */
+        font-size: 26px;
+        font-family: 'Lobster', cursive; /* Tipografía decorativa */
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group {
+        text-align: left;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #BC4E4A; /* Morado mexicano */
+        font-weight: bold;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ffab00; /* Amarillo vibrante */
+        border-radius: 8px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+        border-color: #2e7d32; /* Verde mexicano */
+        outline: none;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        background-color: #2e7d32; /* Verde mexicano */
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-family: 'Lobster', cursive;
+    }
+
+    .btn-submit:hover {
+        background-color: #1b5e20; /* Verde más oscuro */
+    }
+
+    .register-link {
+        margin-top: 15px;
+        color: #c62828; /* Rojo mexicano */
+        font-size: 14px;
+    }
+
+    .register-link a {
+        color: #ff5722; /* Naranja vibrante */
+        text-decoration: none;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+
+    /* Fuentes y estilos decorativos */
+    @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+</style>
 {% endblock %}
