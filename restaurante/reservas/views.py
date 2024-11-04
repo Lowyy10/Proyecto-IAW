@@ -34,10 +34,10 @@ class CrearPedidoView(CreateView):
     model = MisPedidos
     form_class = MisPedidosForm
     template_name = 'reservas/crearpedido_list.html'
-    success_url = reverse_lazy('mispedidos_list')  # Redirige a la vista de pedidos después de crear el pedido
+    success_url = reverse_lazy('mispedidos_list')
 
     def form_valid(self, form):
-        # Puedes realizar cualquier acción adicional aquí antes de guardar el formulario
+        form.instance.usuario = self.request.user  # Asigna el usuario actual al pedido
         return super().form_valid(form)
 
 class PlatosListView(ListView):
@@ -86,12 +86,14 @@ class BebidasListView(ListView):
 
 
 
-class MisPedidosListView(LoginRequiredMixin, ListView):
+class MisPedidosListView(ListView):
     model = MisPedidos
-    login_url = 'login'
+    template_name = 'reservas/mispedidos_list.html'
+    context_object_name = 'pedidos'
+
     def get_queryset(self):
-        # Puedes filtrar los pedidos según el usuario o cualquier otro criterio
-        return MisPedidos.objects.all()
+        # Filtra los pedidos para mostrar solo los del usuario autenticado
+        return MisPedidos.objects.filter(usuario=self.request.user)
 
 
 class HomeView(TemplateView):
@@ -139,5 +141,5 @@ def editar_perfil(request):
 
 @login_required
 def ver_perfil(request):
-    perfil = Perfil.objects.get(user=request.user)
+    perfil, created = Perfil.objects.get_or_create(user=request.user)
     return render(request, 'registration/ver_perfil.html', {'perfil': perfil})

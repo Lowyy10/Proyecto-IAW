@@ -1,44 +1,22 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
 {% block content %}
     <h2 class="text-center mb-4">Mis Pedidos</h2>
     <div class="container">
-        <div class="row">
-            {% if mispedidos_list %}
-                {% for pedido in mispedidos_list %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h2 class="card-title">Pedido ID: {{ pedido.id }}</h2>
-                                <p><strong>Nombre:</strong> {{ pedido.nombre_persona }}</p>
-                                <p><strong>Cantidad:</strong> {{ pedido.cantidad }}</p>
-                                <p><strong>Fecha:</strong> {{ pedido.fecha_pedido }}</p>
-                                <h3>Detalles del Plato:</h3>
-                                <ul>
-                                    <li>
-                                        {{ pedido.cantidad }} x {{ pedido.plato.nombre_plato }}
-                                        {% if pedido.observaciones %}
-                                            <br><strong>Observaciones: {{ pedido.observaciones }}</strong>
-                                        {% endif %}
-                                    </li>
-                                </ul>
-                                <p><strong>Precio Total:</strong> ${{ pedido.total_precio }}</p>
-                                <!-- Botón de eliminación -->
-                                <form action="{% url 'pedido_eliminar' pedido.id %}" method="post" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                </form>
-                            </div>
-                            <br>
-                        </div>
-                    </div>
+        {% if pedidos %}
+            <ul class="list-group">
+                {% for pedido in pedidos %}
+                    <li class="list-group-item">
+                        <strong>Plato:</strong> {{ pedido.plato }}<br>
+                        <strong>Cantidad:</strong> {{ pedido.cantidad }}<br>
+                        <strong>Observaciones:</strong> {{ pedido.observaciones|default:"Ninguna" }}<br>
+                        <strong>Fecha:</strong> {{ pedido.fecha_pedido }}
+                    </li>
                 {% endfor %}
-                <br>
-            {% else %}
-                <p class="text-center">No tienes pedidos creados aún.</p>
-            {% endif %}
-        </div>
+            </ul>
+        {% else %}
+            <p class="text-center">No has realizado ningún pedido.</p>
+        {% endif %}
     </div>
 {% endblock %}

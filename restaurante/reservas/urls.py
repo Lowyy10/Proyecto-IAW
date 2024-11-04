@@ -14,9 +14,7 @@ urlpatterns = [
     path('crear_pedido/', CrearPedidoView.as_view(), name='crearpedido_list'),    
     path('login/', IniciarSesion.as_view(), name='login'),
     path('register/', RegistroUsuario.as_view(), name='register'),
-    path('editar-perfil/', editar_perfil, name='registration/editar_perfil'),
-    path('ver-perfil/', ver_perfil, name='perfil'),
-    path('valoracion/eliminar/<int:valoracion_id>/', ValoracionEliminarView.as_view(), name='valoracion_eliminar'),
+    path('registration/editar_perfil/', editar_perfil, name='editar_perfil'),
+    path('registration/ver_perfil.html', ver_perfil, name='perfil'),
+    path('valoracion/eliminar/<int:valoracion_id>/', ValoracionEliminarView.as_view(), name='valoracion_eliminar')
 ]
-
-

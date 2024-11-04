@@ -108,11 +108,12 @@ class EstadoPedido(models.Model):
     estado = models.CharField(max_length=20)
 
 class MisPedidos(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # Replace '1' with an actual user ID
     nombre_persona = models.CharField(max_length=50)
-    plato = models.ForeignKey(Platos, on_delete=models.CASCADE)  # Relaciona el pedido directamente con un plato
+    plato = models.ForeignKey(Platos, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
     observaciones = models.TextField(blank=True, null=True)
-    fecha_pedido = models.DateTimeField(auto_now_add=True)  # Registra automáticamente la fecha del pedido
+    fecha_pedido = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Pedido para recoger"
