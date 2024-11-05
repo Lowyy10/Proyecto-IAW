@@ -36,7 +36,7 @@ class IngredienteAdmin(admin.ModelAdmin):
     search_fields = ('nombre_ingrediente',)  # Permite buscar ingredientes por nombre
 
 class PlatosAdmin(admin.ModelAdmin):
-    list_display = ('nombre_plato', 'precio_plato', 'tipo_comida', 'mostrar_ingredientes', 'valoracion', 'comentarios')  # Mostrar tipo de comida
+    list_display = ('nombre_plato', 'precio_plato', 'tipo_comida', 'mostrar_ingredientes', 'image')  # Mostrar tipo de comida
     search_fields = ('nombre_plato',)
     filter_horizontal = ('ingredientes',)
 

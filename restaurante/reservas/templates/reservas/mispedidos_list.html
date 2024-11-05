@@ -12,6 +12,12 @@
                         <strong>Cantidad:</strong> {{ pedido.cantidad }}<br>
                         <strong>Observaciones:</strong> {{ pedido.observaciones|default:"Ninguna" }}<br>
                         <strong>Fecha:</strong> {{ pedido.fecha_pedido }}
+                        
+                        <!-- Formulario para eliminar el pedido -->
+                        <form action="{% url 'pedido_eliminar' pedido.id %}" method="post" class="mt-2" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu pedido? Esta acción no se puede deshacer.');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
                     </li>
                 {% endfor %}
             </ul>

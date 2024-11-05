@@ -6,20 +6,38 @@
 
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/pages.css' %}">
-    <h2>Platos</h2>
-    <ul>
-        {% for plato in object_list %}
-            <li>
-                <strong>Plato:</strong> {{ plato.nombre_plato }}<br>
-                <strong>Precio:</strong> {{ plato.precio_plato }}€<br>
-                <strong>Ingredientes:</strong>
-                <ul>
-                    {% for ingrediente in plato.ingredientes.all %}
-                        <li>-{{ ingrediente.nombre_ingrediente }}</li>
-                    {% endfor %}
-                </ul>
-                <br>
-            </li>
-        {% endfor %}
-    </ul>
+
+<h2 class="text-center mb-4">Platos</h2>
+<div class="container">
+    <div class="row">
+        {% if object_list %}
+            {% for plato in object_list %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ plato.nombre_plato }}</h3>
+                            <p><strong>Precio:</strong> {{ plato.precio_plato }}€</p>
+                            <p><strong>Ingredientes:</strong></p>
+                            <ul>
+                                {% for ingrediente in plato.ingredientes.all %}
+                                    <li>{{ ingrediente.nombre_ingrediente }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% if plato.image %}
+                                <div style="position: relative; display: inline-block;">
+                                    <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="max-width: 200px; max-height: 200px; cursor: pointer;">
+                                </div>
+                            {% else %}
+                                <p>No hay imagen disponible</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">No hay platos disponibles en este momento.</p>
+        {% endif %}
+    </div>
+</div>
+
 {% endblock %}
