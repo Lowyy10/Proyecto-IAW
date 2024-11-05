@@ -88,9 +88,8 @@ class Platos(models.Model):
     nombre_plato = models.CharField(max_length=100)
     precio_plato = models.DecimalField(max_digits=5, decimal_places=2)
     tipo_comida = models.ForeignKey(Tipo_comida, on_delete=models.CASCADE, default=1)  # Asume que el tipo de comida con ID 1 es el valor predeterminado
-    ingredientes = models.ManyToManyField(Ingrediente)
+    ingredientes = models.ManyToManyField(Ingrediente, blank=True)  # Haciendo que el campo ingredientes no sea obligatorio
     image = models.ImageField(upload_to='photos/', blank=True)
-
 
     class Meta:
         verbose_name = "Plato"
