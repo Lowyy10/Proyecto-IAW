@@ -85,14 +85,6 @@ class Ingrediente(models.Model):
         return self.nombre_ingrediente
 
 class Platos(models.Model):
-    ESTRELLAS = [
-        (0, '☆☆☆☆☆'),
-        (1, '★☆☆☆☆'),
-        (2, '★★☆☆☆'),
-        (3, '★★★☆☆'),
-        (4, '★★★★☆'),
-        (5, '★★★★★'),
-    ]
     nombre_plato = models.CharField(max_length=100)
     precio_plato = models.DecimalField(max_digits=5, decimal_places=2)
     tipo_comida = models.ForeignKey(Tipo_comida, on_delete=models.CASCADE, default=1)  # Asume que el tipo de comida con ID 1 es el valor predeterminado

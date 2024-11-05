@@ -1,4 +1,4 @@
-from reservas.models import Platos, Bebidas, MisPedidos, Perfil,Valoracion
+from reservas.models import Platos, Bebidas, MisPedidos, Perfil,Valoracion, Tipo_bebida,Tipo_comida,Ingrediente
 from django.views.generic import FormView,View,ListView, TemplateView, FormView, ListView, CreateView, FormView
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
@@ -40,8 +40,50 @@ class CrearPedidoView(CreateView):
         form.instance.usuario = self.request.user  # Asigna el usuario actual al pedido
         return super().form_valid(form)
 
+
+from django.db.models import Q  # Importa Q para usar consultas más complejas
+
 class PlatosListView(ListView):
     model = Platos
+    context_object_name = 'object_list'
+    template_name = 'platos_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tipos_comida'] = Tipo_comida.objects.all()  # Obtener todos los tipos de comida
+        context['ingredientes'] = Ingrediente.objects.all()  # Obtener todos los ingredientes para el filtro
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Obtener parámetros de búsqueda
+        nombre = self.request.GET.get('nombre', '')
+        tipo_id = self.request.GET.get('tipo', None)
+        precio_maximo = self.request.GET.get('precio', None)
+        ingrediente_id = self.request.GET.get('ingrediente', None)
+
+        # Filtrar por nombre
+        if nombre:
+            queryset = queryset.filter(nombre_plato__icontains=nombre)
+
+        # Filtrar por tipo de comida
+        if tipo_id:
+            queryset = queryset.filter(tipo_comida__id=tipo_id)
+
+        # Filtrar por precio máximo
+        if precio_maximo:
+            try:
+                precio_maximo = float(precio_maximo)
+                queryset = queryset.filter(precio_plato__lte=precio_maximo)
+            except ValueError:
+                pass  # Si no es un número, ignoramos este filtro
+
+        # Filtrar por ingrediente (usando Q para manejar la relación many-to-many)
+        if ingrediente_id:
+            queryset = queryset.filter(ingredientes__id=ingrediente_id)
+
+        return queryset
 
 class ValoracionEliminarView(View):
     def post(self, request, *args, **kwargs):
@@ -54,7 +96,7 @@ class ValoracionEliminarView(View):
 class BebidasListView(ListView):
     model = Bebidas
     context_object_name = 'photos'
-    template_name = 'tu_template_de_bebidas.html'  # Asegúrate de especificar el nombre correcto de tu plantilla
+    template_name = 'bebidas_list'  # Asegúrate de especificar el nombre correcto de tu plantilla
 
     def post(self, request, *args, **kwargs):
         bebida_id = request.POST.get('bebida_id')
@@ -74,16 +116,42 @@ class BebidasListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['valoracion_form'] = ValoracionForm()
+
+        # Calcular la media de las valoraciones para cada bebida
         for bebida in context['photos']:
-            # Calcular la media de las valoraciones
             valoraciones = bebida.valoraciones.all()
             if valoraciones.exists():
                 media_valoracion = valoraciones.aggregate(models.Avg('valoracion'))['valoracion__avg']
                 bebida.media_valoracion = round(media_valoracion, 2)  # Redondear a dos decimales
             else:
                 bebida.media_valoracion = 0  # Sin valoraciones, media es 0
+        
+        # Obtener los tipos de bebida para el filtro
+        context['tipos_bebida'] = Tipo_bebida.objects.all()
+
         return context
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Obtener parámetros de búsqueda
+        nombre = self.request.GET.get('nombre', '')
+        tipo_id = self.request.GET.get('tipo', None)
+        precio_maximo = self.request.GET.get('precio', None)
+
+        # Filtrar por nombre
+        if nombre:
+            queryset = queryset.filter(nom_bebida__icontains=nombre)
+
+        # Filtrar por tipo
+        if tipo_id:
+            queryset = queryset.filter(tipo_bebi__id=tipo_id)
+
+        # Filtrar por precio
+        if precio_maximo:
+            queryset = queryset.filter(precio_bebida__lte=precio_maximo)
+
+        return queryset
 
 
 class MisPedidosListView(ListView):

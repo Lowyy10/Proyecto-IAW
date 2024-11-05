@@ -3,49 +3,159 @@
 {% load static %}
 
 {% block content %}
-    <h1 class="text-center mb-4">Bebidas</h1>
-    <div class="container">
+<style>
+    /* Estilos para el contenedor, filas y columnas */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .col-md-4 {
+        flex: 0 0 calc(33.333% - 20px);
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-body {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        object-fit: cover;
+    }
+
+    p {
+        margin: 5px 0;
+        color: #555;
+    }
+
+    .text-danger {
+        color: red;
+        font-weight: bold;
+    }
+
+    h4 {
+        margin-top: 15px;
+        font-size: 1.2rem;
+    }
+
+    hr {
+        border: 0;
+        height: 2px;
+        background-color: red;
+        margin: 20px 0;
+    }
+
+    .valoraciones {
+        display: none; /* Ocultar inicialmente */
+        margin-top: 10px;
+        text-align: left; /* Alinear texto a la izquierda */
+    }
+</style>
+
+<h1 class="text-center mb-4">Bebidas</h1>
+
+<!-- Formulario de Filtros -->
+<div class="container">
+    <form method="GET" class="mb-4">
         <div class="row">
-            {% if photos %}
-                {% for bebida in photos %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="card-title">{{ bebida.nom_bebida }}</h3>
-                                <p><strong>Precio:</strong> {{ bebida.precio_bebida }}€</p>
-                                <p><strong>Tipos de bebida:</strong> 
-                                    {% for tipo in bebida.tipo_bebi.all %}
-                                        {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                </p>
-                                <p><strong>Valoración Media:</strong> 
-                                    {% if bebida.media_valoracion %}
-                                        {{ bebida.media_valoracion }} estrellas
-                                    {% else %}
-                                        No hay valoraciones aún.
-                                    {% endif %}
-                                </p>
-                                {% if bebida.image %}
-                                    <div style="position: relative; display: inline-block;">
-                                        <img src="{{ bebida.image.url }}" alt="{{ bebida.nom_bebida }}" style="max-width: 200px; max-height: 200px; cursor: pointer;" onclick="document.getElementById('valoracion-form-{{ bebida.id }}').style.display='block'">
-                                        
-                                        <!-- Solo mostrar el formulario de valoración si el usuario está autenticado -->
-                                        {% if user.is_authenticated %}
-                                            <form id="valoracion-form-{{ bebida.id }}" action="" method="POST" style="display: none;">
-                                                {% csrf_token %}
-                                                {{ valoracion_form.as_p }}
-                                                <input type="hidden" name="bebida_id" value="{{ bebida.id }}">
-                                                <button type="submit" class="btn btn-primary mt-2">Enviar Valoración</button>
-                                            </form>
-                                        {% else %}
-                                            <p class="text-danger">Inicia sesión para valorar esta bebida.</p>
-                                        {% endif %}
-                                    </div>
+            <div class="col-md-4">
+                <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre" value="{{ request.GET.nombre }}">
+            </div>
+            <div class="col-md-4">
+                <select name="tipo" class="form-control">
+                    <option value="">Seleccionar tipo</option>
+                    {% for tipo in tipos_bebida %}
+                        <option value="{{ tipo.id }}"{% if tipo.id|add:"" == request.GET.tipo %} selected{% endif %}>{{ tipo.tipo_bebida }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-4">
+                <input type="number" name="precio" class="form-control" placeholder="Precio máximo" value="{{ request.GET.precio }}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
+    </form>
+</div>
+
+<!-- Lista de Bebidas -->
+<div class="container">
+    <div class="row">
+        {% if photos %}
+            {% for bebida in photos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ bebida.nom_bebida }}</h3>
+                            <p><strong>Precio:</strong> {{ bebida.precio_bebida }}€</p>
+                            <p><strong>Tipos de bebida:</strong> 
+                                {% for tipo in bebida.tipo_bebi.all %}
+                                    {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                            <p><strong>Valoración Media:</strong> 
+                                {% if bebida.media_valoracion %}
+                                    {{ bebida.media_valoracion }} estrellas
                                 {% else %}
-                                    <p>No hay imagen disponible</p>
+                                    No hay valoraciones aún.
                                 {% endif %}
-                                
-                                <!-- Mostrar las valoraciones del usuario -->
+                            </p>
+                            {% if bebida.image %}
+                                <div style="position: relative; display: inline-block;">
+                                    <img src="{{ bebida.image.url }}" alt="{{ bebida.nom_bebida }}" style="cursor: pointer;" onclick="document.getElementById('valoracion-form-{{ bebida.id }}').style.display='block'">
+                                    
+                                    <!-- Solo mostrar el formulario de valoración si el usuario está autenticado -->
+                                    {% if user.is_authenticated %}
+                                        <form id="valoracion-form-{{ bebida.id }}" action="" method="POST" style="display: none;">
+                                            {% csrf_token %}
+                                            {{ valoracion_form.as_p }}
+                                            <input type="hidden" name="bebida_id" value="{{ bebida.id }}">
+                                            <button type="submit" class="btn btn-primary mt-2">Enviar Valoración</button>
+                                        </form>
+                                    {% else %}
+                                        <p class="text-danger">Inicia sesión para valorar esta bebida.</p>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <p>No hay imagen disponible</p>
+                            {% endif %}
+                            <br>
+                            <!-- Botón para ver valoraciones -->
+                            <button class="btn btn-secondary mt-2" onclick="toggleValoraciones('{{ bebida.id }}')">Ver Valoraciones</button>
+                            
+                            <!-- Mostrar las valoraciones del usuario -->
+                            <div id="valoraciones-{{ bebida.id }}" class="valoraciones">
                                 <h4>Mis Valoraciones:</h4>
                                 {% for valoracion in bebida.valoraciones.all %}
                                     <div>
@@ -64,13 +174,26 @@
                             </div>
                         </div>
                     </div>
-                    <br>
-                    <hr size="2px" color="red" />
-                    <br>
-                {% endfor %}
-            {% else %}
-                <p class="text-center">No hay bebidas disponibles en este momento.</p>
-            {% endif %}
-        </div>
+                </div>
+                <br>
+                <hr />
+                <br>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">No hay bebidas disponibles en este momento.</p>
+        {% endif %}
     </div>
+</div>
+
+<script>
+    function toggleValoraciones(bebidaId) {
+        var valoracionesDiv = document.getElementById('valoraciones-' + bebidaId);
+        if (valoracionesDiv.style.display === 'none' || valoracionesDiv.style.display === '') {
+            valoracionesDiv.style.display = 'block'; // Mostrar valoraciones
+        } else {
+            valoracionesDiv.style.display = 'none'; // Ocultar valoraciones
+        }
+    }
+</script>
+
 {% endblock %}

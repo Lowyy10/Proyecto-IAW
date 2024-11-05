@@ -1,14 +1,125 @@
 {% extends 'base.html' %}
 
-{% block title %}Página de Inicio{% endblock %}
+{% block title %}Lista de Platos{% endblock %}
 
 {% block content %}
 
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/pages.css' %}">
 
+<style>
+    /* General Container Style */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Row style */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    /* Column Style */
+    .col-md-4 {
+        flex: 0 0 calc(33.333% - 20px);
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    /* Card Style */
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-body {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        object-fit: cover;
+    }
+
+    /* Text Styling */
+    p {
+        margin: 5px 0;
+        color: #555;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        margin: 5px 0;
+        color: #777;
+        font-size: 0.9rem;
+    }
+
+    .text-center {
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+    }
+</style>
+
 <h2 class="text-center mb-4">Platos</h2>
 <div class="container">
+    <form method="GET" class="mb-4">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre" value="{{ request.GET.nombre }}">
+            </div>
+            <div class="col-md-3">
+                <select name="tipo" class="form-control">
+                    <option value="">Seleccionar tipo</option>
+                    {% for tipo in tipos_comida %}
+                        <option value="{{ tipo.id }}"{% if tipo.id|stringformat:"d" == request.GET.tipo %} selected{% endif %}>
+                            {{ tipo.tipo_comida }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" name="precio" class="form-control" placeholder="Precio máximo" value="{{ request.GET.precio }}">
+            </div>
+            <div class="col-md-3">
+                <select name="ingrediente" class="form-control">
+                    <option value="">Seleccionar ingrediente</option>
+                    {% for ingrediente in ingredientes %}
+                        <option value="{{ ingrediente.id }}"{% if ingrediente.id|stringformat:"d" == request.GET.ingrediente %} selected{% endif %}>
+                            {{ ingrediente.nombre_ingrediente }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
+    </form>
+    <br><br>
     <div class="row">
         {% if object_list %}
             {% for plato in object_list %}
@@ -16,6 +127,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h3 class="card-title">{{ plato.nombre_plato }}</h3>
+                            <p><strong>Tipo comida:</strong> {{ plato.tipo_comida }}</p>
                             <p><strong>Precio:</strong> {{ plato.precio_plato }}€</p>
                             <p><strong>Ingredientes:</strong></p>
                             <ul>
@@ -24,11 +136,9 @@
                                 {% endfor %}
                             </ul>
                             {% if plato.image %}
-                                <div style="position: relative; display: inline-block;">
-                                    <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="max-width: 200px; max-height: 200px; cursor: pointer;">
-                                </div>
+                                <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}">
                             {% else %}
-                                <p>No hay imagen disponible</p>
+                                <img src="/media/photos/blanco.png" alt="Imagen en blanco">
                             {% endif %}
                         </div>
                     </div>
