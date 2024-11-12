@@ -1,4 +1,4 @@
-from reservas.models import Platos, Bebidas, MisPedidos, Perfil,Valoracion, Tipo_bebida,Tipo_comida,Ingrediente
+from reservas.models import Platos, Bebidas,ValoracionPlato, MisPedidos, Perfil,Valoracion, Tipo_bebida,Tipo_comida,Ingrediente
 from django.views.generic import FormView,View,ListView, TemplateView, FormView, ListView, CreateView, FormView
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,6 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.db.models import Avg
 from django.views.generic import CreateView
 from django.views.generic.edit import DeleteView
 from django.db import models
@@ -50,36 +51,52 @@ class PlatosListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tipos_comida'] = Tipo_comida.objects.all()  # Obtener todos los tipos de comida
-        context['ingredientes'] = Ingrediente.objects.all()  # Obtener todos los ingredientes para el filtro
+        context['valoracion_form'] = ValoracionForm()
+        context['tipos_comida'] = Tipo_comida.objects.all()
+        context['ingredientes'] = Ingrediente.objects.all()
+
+        for plato in context['object_list']:
+            valoraciones = plato.valoraciones.all()
+            if valoraciones.exists():
+                media_valoracion = valoraciones.aggregate(Avg('valoracion'))['valoracion__avg']
+                plato.media_valoracion = round(media_valoracion, 2)
+            else:
+                plato.media_valoracion = 0
+
         return context
+
+    def post(self, request, *args, **kwargs):
+        plato_id = request.POST.get('plato_id')
+        plato = get_object_or_404(Platos, id=plato_id)
+        valoracion_form = ValoracionForm(request.POST)
+
+        if valoracion_form.is_valid():
+            ValoracionPlato.objects.update_or_create(
+                plato=plato,
+                usuario=request.user,
+                defaults={'valoracion': valoracion_form.cleaned_data['valoracion']}
+            )
+            return redirect('platos_list')  # Cambia a la URL correcta para tu lista de platos
+
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = super().get_queryset()
-
-        # Obtener parámetros de búsqueda
         nombre = self.request.GET.get('nombre', '')
         tipo_id = self.request.GET.get('tipo', None)
         precio_maximo = self.request.GET.get('precio', None)
         ingrediente_id = self.request.GET.get('ingrediente', None)
 
-        # Filtrar por nombre
         if nombre:
             queryset = queryset.filter(nombre_plato__icontains=nombre)
-
-        # Filtrar por tipo de comida
         if tipo_id:
             queryset = queryset.filter(tipo_comida__id=tipo_id)
-
-        # Filtrar por precio máximo
         if precio_maximo:
             try:
                 precio_maximo = float(precio_maximo)
                 queryset = queryset.filter(precio_plato__lte=precio_maximo)
             except ValueError:
-                pass  # Si no es un número, ignoramos este filtro
-
-        # Filtrar por ingrediente (usando Q para manejar la relación many-to-many)
+                pass
         if ingrediente_id:
             queryset = queryset.filter(ingredientes__id=ingrediente_id)
 
@@ -225,3 +242,4 @@ def editar_perfil(request):
 def ver_perfil(request):
     perfil, created = Perfil.objects.get_or_create(user=request.user)
     return render(request, 'registration/ver_perfil.html', {'perfil': perfil})
+

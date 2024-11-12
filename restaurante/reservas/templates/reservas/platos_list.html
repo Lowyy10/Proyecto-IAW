@@ -1,35 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}Lista de Platos{% endblock %}
+{% load static %}
 
 {% block content %}
-
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/pages.css' %}">
-
 <style>
-    /* General Container Style */
     .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
     }
 
-    /* Row style */
     .row {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
     }
 
-    /* Column Style */
     .col-md-4 {
         flex: 0 0 calc(33.333% - 20px);
         margin-bottom: 20px;
         box-sizing: border-box;
     }
 
-    /* Card Style */
     .card {
         border: 1px solid #e0e0e0;
         border-radius: 8px;
@@ -61,65 +53,62 @@
         object-fit: cover;
     }
 
-    /* Text Styling */
     p {
         margin: 5px 0;
         color: #555;
     }
 
-    ul {
-        list-style: none;
-        padding: 0;
+    .text-danger {
+        color: red;
+        font-weight: bold;
     }
 
-    ul li {
-        margin: 5px 0;
-        color: #777;
-        font-size: 0.9rem;
+    h4 {
+        margin-top: 15px;
+        font-size: 1.2rem;
     }
 
-    .text-center {
-        text-align: center;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #333;
+    hr {
+        border: 0;
+        height: 2px;
+        background-color: red;
+        margin: 20px 0;
+    }
+
+    .valoraciones {
+        display: none;
+        margin-top: 10px;
+        text-align: left;
     }
 </style>
 
-<h2 class="text-center mb-4">Platos</h2>
+<h1 class="text-center mb-4">Platos</h1>
+
+<!-- Formulario de Filtros -->
 <div class="container">
     <form method="GET" class="mb-4">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre" value="{{ request.GET.nombre }}">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <select name="tipo" class="form-control">
                     <option value="">Seleccionar tipo</option>
                     {% for tipo in tipos_comida %}
-                        <option value="{{ tipo.id }}"{% if tipo.id|stringformat:"d" == request.GET.tipo %} selected{% endif %}>
-                            {{ tipo.tipo_comida }}
-                        </option>
+                        <option value="{{ tipo.id }}"{% if tipo.id|add:"" == request.GET.tipo %} selected{% endif %}>{{ tipo.tipo_comida }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <input type="number" name="precio" class="form-control" placeholder="Precio máximo" value="{{ request.GET.precio }}">
-            </div>
-            <div class="col-md-3">
-                <select name="ingrediente" class="form-control">
-                    <option value="">Seleccionar ingrediente</option>
-                    {% for ingrediente in ingredientes %}
-                        <option value="{{ ingrediente.id }}"{% if ingrediente.id|stringformat:"d" == request.GET.ingrediente %} selected{% endif %}>
-                            {{ ingrediente.nombre_ingrediente }}
-                        </option>
-                    {% endfor %}
-                </select>
             </div>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
     </form>
-    <br><br>
+</div>
+
+<!-- Lista de Platos -->
+<div class="container">
     <div class="row">
         {% if object_list %}
             {% for plato in object_list %}
@@ -127,27 +116,79 @@
                     <div class="card">
                         <div class="card-body">
                             <h3 class="card-title">{{ plato.nombre_plato }}</h3>
-                            <p><strong>Tipo comida:</strong> {{ plato.tipo_comida }}</p>
                             <p><strong>Precio:</strong> {{ plato.precio_plato }}€</p>
-                            <p><strong>Ingredientes:</strong></p>
-                            <ul>
+                            <p><strong>Ingredientes:</strong> 
                                 {% for ingrediente in plato.ingredientes.all %}
-                                    <li>{{ ingrediente.nombre_ingrediente }}</li>
+                                    {{ ingrediente.nombre_ingrediente }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
-                            </ul>
+                            </p>
+                            <p><strong>Valoración Media:</strong> 
+                                {% if plato.media_valoracion %}
+                                    {{ plato.media_valoracion }} estrellas
+                                {% else %}
+                                    No hay valoraciones aún.
+                                {% endif %}
+                            </p>
                             {% if plato.image %}
-                                <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}">
+                                <div style="position: relative; display: inline-block;">
+                                    <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="cursor: pointer;" onclick="document.getElementById('valoracion-form-{{ plato.id }}').style.display='block'">
+                                    
+                                    {% if user.is_authenticated %}
+                                        <form id="valoracion-form-{{ plato.id }}" action="" method="POST" style="display: none;">
+                                            {% csrf_token %}
+                                            {{ valoracion_form.as_p }}
+                                            <input type="hidden" name="plato_id" value="{{ plato.id }}">
+                                            <button type="submit" class="btn btn-primary mt-2">Enviar Valoración</button>
+                                        </form>
+                                    {% else %}
+                                        <p class="text-danger">Inicia sesión para valorar este plato.</p>
+                                    {% endif %}
+                                </div>
                             {% else %}
-                                <img src="/media/photos/blanco.png" alt="Imagen en blanco">
+                                <p>No hay imagen disponible</p>
                             {% endif %}
+                            <br>
+                            <button class="btn btn-secondary mt-2" onclick="toggleValoraciones('{{ plato.id }}')">Ver Valoraciones</button>
+                            
+                            <div id="valoraciones-{{ plato.id }}" class="valoraciones">
+                                <h4>Mis Valoraciones:</h4>
+                                {% for valoracion in plato.valoraciones.all %}
+                                    <div>
+                                        <strong>{{ valoracion.usuario.username }}</strong> - 
+                                        {{ valoracion.valoracion }} estrellas
+                                        {% if valoracion.usuario == request.user %}
+                                            <form action="{% url 'valoracion_eliminar' valoracion.id %}" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu valoración? Esta acción no se puede deshacer.');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm">Eliminar Valoración</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% empty %}
+                                    <p>No has valorado este plato.</p>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
+                <br>
+                <hr />
+                <br>
             {% endfor %}
         {% else %}
             <p class="text-center">No hay platos disponibles en este momento.</p>
         {% endif %}
     </div>
 </div>
+
+<script>
+    function toggleValoraciones(platoId) {
+        var valoracionesDiv = document.getElementById('valoraciones-' + platoId);
+        if (valoracionesDiv.style.display === 'none' || valoracionesDiv.style.display === '') {
+            valoracionesDiv.style.display = 'block';
+        } else {
+            valoracionesDiv.style.display = 'none';
+        }
+    }
+</script>
 
 {% endblock %}
