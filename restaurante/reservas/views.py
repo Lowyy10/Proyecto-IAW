@@ -243,3 +243,32 @@ def ver_perfil(request):
     perfil, created = Perfil.objects.get_or_create(user=request.user)
     return render(request, 'registration/ver_perfil.html', {'perfil': perfil})
 
+from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+from .serializers import PlatoSerializer, BebidaSerializer
+from .filters import BebidaFilter
+from django_filters import rest_framework as filters
+from .filters import PlatoFilter  # Asegúrate de importar el filtro
+from .models import Platos
+from .serializers import PlatoSerializer
+from rest_framework import generics
+
+class PlatoListCreateView(generics.ListCreateAPIView):
+    queryset = Platos.objects.all()
+    serializer_class = PlatoSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PlatoFilter
+
+class PlatoDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Platos.objects.all()
+    serializer_class = PlatoSerializer
+
+class BebidaListCreateView(generics.ListCreateAPIView):
+    queryset = Bebidas.objects.all()
+    serializer_class = BebidaSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BebidaFilter
+
+class BebidaDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Bebidas.objects.all()
+    serializer_class = BebidaSerializer
