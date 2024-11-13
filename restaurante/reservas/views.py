@@ -256,7 +256,7 @@ from rest_framework import generics
 class PlatoListCreateView(generics.ListCreateAPIView):
     queryset = Platos.objects.all()
     serializer_class = PlatoSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = [filters.DjangoFilterBackend]
     filterset_class = PlatoFilter
 
 class PlatoDetailView(generics.RetrieveUpdateDestroyAPIView):
