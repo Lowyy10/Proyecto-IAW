@@ -246,12 +246,8 @@ def ver_perfil(request):
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import PlatoSerializer, BebidaSerializer
-from .filters import BebidaFilter
+from .filters import BebidaFilter, PlatoFilter
 from django_filters import rest_framework as filters
-from .filters import PlatoFilter  # Asegúrate de importar el filtro
-from .models import Platos
-from .serializers import PlatoSerializer
-from rest_framework import generics
 
 class PlatoListCreateView(generics.ListCreateAPIView):
     queryset = Platos.objects.all()

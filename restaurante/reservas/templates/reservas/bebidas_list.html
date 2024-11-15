@@ -96,8 +96,7 @@
                 <select name="tipo" class="form-control">
                     <option value="">Seleccionar tipo</option>
                     {% for tipo in tipos_bebida %}
-                        <option value="{{ tipo.id }}"{% if tipo.id|add:"" == request.GET.tipo %} selected{% endif %}>{{ tipo.tipo_bebida }}</option>
-                    {% endfor %}
+                    <option value="{{ tipo.id }}"{% if tipo.id|stringformat:"s" == request.GET.tipo|stringformat:"s" %} selected{% endif %}>{{ tipo.tipo_bebida }}</option>                    {% endfor %}
                 </select>
             </div>
             
