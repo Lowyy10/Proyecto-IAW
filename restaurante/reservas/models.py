@@ -118,7 +118,7 @@ class EstadoPedido(models.Model):
 class MisPedidos(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)  # Sin valor por defecto
     nombre_persona = models.CharField(max_length=50)
-    plato = models.ForeignKey(Platos, on_delete=models.CASCADE, default=1)
+    plato = models.ForeignKey(Platos, on_delete=models.CASCADE)  # Asegúrate de que existan platos en la base de datos
     cantidad = models.PositiveIntegerField(default=1)
     observaciones = models.TextField(blank=True, null=True)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
