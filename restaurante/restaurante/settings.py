@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-^i!4c_t@$c$%4u0-1p7ib=#*8q@91hv(0tb5024sc1e+0#37(3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'casatexasmexico.duckdns.org', '*']
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -124,19 +124,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 # URL base para archivos estáticos
+# Archivos estáticos
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/ubuntu/casatexasmexico/Proyecto-IAW/restaurante/reservas/static/'
 
-# Opcional: directorio para buscar archivos estáticos en tu proyecto
-STATICFILES_DIRS = ['reservas/static']
+# Archivos de media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/home/ubuntu/casatexasmexico/Proyecto-IAW/restaurante/media/'
 
-# Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
-
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
+CSRF_TRUSTED_ORIGINS = ['https://casatexasmexico.duckdns.org']
