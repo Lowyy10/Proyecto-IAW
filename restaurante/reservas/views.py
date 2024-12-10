@@ -181,8 +181,20 @@ class MisPedidosListView(ListView):
         return MisPedidos.objects.filter(usuario=self.request.user)
 
 
+from django.db.models import Avg
+from django.views.generic import TemplateView
+
 class HomeView(TemplateView):
     template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Obtener los 3 platos más valorados
+        context['top_platos'] = Platos.objects.annotate(
+            media_valoracion=Avg('valoraciones__valoracion')
+        ).order_by('-media_valoracion')[:3]  # Solo los 3 primeros
+        return context
+
 
 # Vista para iniciar sesión
 class IniciarSesion(LoginView):

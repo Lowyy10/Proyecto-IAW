@@ -1,10 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}Página de Inicio{% endblock %}
+{% block title %}Inicio{% endblock %}
 
 {% block content %}
-<main class="image-container" style="text-align: center;">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgpMFptFAZtXdFkTOif8oM9aoVs_WfRzbq4Q&s" width="500" height="500" style="display: block; margin: 0 auto;">
+<main class="image-container" style="text-align: center; position: relative;">
+    <div class="background-image" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgpMFptFAZtXdFkTOif8oM9aoVs_WfRzbq4Q&s'); background-size: cover; background-position: center; opacity: 0.1; z-index: -1;"></div>
+
+    <section class="top-platos" style="margin-top: 30px;">
+        <h2>Platos Más Valorados</h2>
+        <br>
+        <div class="platos-grid" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            {% for plato in top_platos %}
+            <div class="plato-card" style="border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 15px; max-width: 300px; text-align: center;">
+                <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="width: 100%; border-radius: 10px;">
+                <h3 style="margin-top: 10px;">{{ plato.nombre_plato }}</h3>
+                <p style="color: #777;">Valoración Media: {{ plato.media_valoracion|default:0|floatformat:2 }}</p>
+                <p style="font-weight: bold;">${{ plato.precio_plato }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
 </main>
 {% endblock %}
 

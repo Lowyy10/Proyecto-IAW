@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Casa Texas Mexico{% endblock %}</title>
-
     <!-- Cargar el archivo CSS -->
+    <title>{% block title %}{% endblock %} - Casa Texas Mexico</title>
     {% load static %}
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header>
         <!-- Menú del usuario -->
         <div class="dropdown menu-dropdown">
-            <button class="dropbtn">Menú</button>
+            <button class="dropbtn">≡</button>
             <div class="dropdown-content">
                 <a href="{% url 'bebidas_list' %}">Bebidas</a>
                 <a href="{% url 'platos_list' %}">Platos</a>
@@ -65,7 +65,6 @@
             </ul>
         {% endif %}
         {% block content %}
-        <!-- Contenido específico -->
         {% endblock %}
     </main>
 </body>

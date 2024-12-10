@@ -1,7 +1,9 @@
 <!-- templates/ver_perfil.html -->
 {% extends "base.html" %}
+{% block title %}Tu perfil{% endblock %}
 
 {% block content %}
+
 <div class="profile-container">
     <h2>Perfil de {{ perfil.user.username }}</h2>
     <p>Email: {{ perfil.user.email }}</p>

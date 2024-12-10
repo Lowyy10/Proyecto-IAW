@@ -78,6 +78,9 @@ header h1 {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 5px;
+    opacity: 0; /* Inicialmente invisible */
+    transform: translateY(-10px); /* Desplazado ligeramente hacia arriba */
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .dropdown-content a {
@@ -93,8 +96,49 @@ header h1 {
 }
 
 .dropdown:hover .dropdown-content {
-    display: block; /* Muestra el contenido al pasar el ratón */
+    display: block;
+    opacity: 1; /* Se vuelve visible */
+    transform: translateY(0); /* Desplazamiento hacia su posición normal */
 }
+
+/* Animación de entrada para los platos */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Aplicar la animación de entrada a las tarjetas de los platos */
+.plato-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Efecto de hover para las imágenes */
+.plato-card img {
+    width: 100%;
+    height: 200px; /* Fija la altura */
+    object-fit: cover; /* Mantén la proporción de la imagen y recorta si es necesario */
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out; /* Transición para el hover */
+}
+
+.plato-card img:hover {
+    transform: scale(1.05); /* Aumenta el tamaño un 5% */
+}
+
+/* Efecto de hover en las tarjetas de los platos */
+.plato-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Aumenta la sombra */
+    transform: translateY(-5px); /* Eleva ligeramente la tarjeta */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Formulario */
 .form-container {
     max-width: 400px;
     margin: 0 auto; /* Centra horizontalmente */
@@ -118,6 +162,7 @@ header h1 {
 .form-container button {
     margin-top: 10px;
 }
+
 /* Responsividad */
 @media (max-width: 768px) {
     .menu-dropdown, .auth-buttons {
