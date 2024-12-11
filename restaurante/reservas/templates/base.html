@@ -3,18 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Cargar el archivo CSS -->
     <title>{% block title %}{% endblock %} - Casa Texas Mexico</title>
     {% load static %}
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <style>
+        /* General */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #ffffff;
+        }
+
+        /* Header */
+        header {
+            background-color: #a10702b6;
+            color: white;
+            padding: 10px 20px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Logo */
+        .header-logo {
+            display: flex;
+            align-items: center;
+            margin-right: 20px; /* Espaciado adicional */
+        }
+
+        .header-logo img {
+            max-width: 60px;
+            height: auto;
+        }
+
+        /* Menú */
+        nav.menu {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+        }
+
+        .menu-left,
+        .menu-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        nav.menu a, .logout-button {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #00000030;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav.menu a:hover, .logout-button:hover {
+            background-color: #ff000067;
+        }
+
+        /* Botón de Cerrar Sesión */
+        .logout-button {
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Botones de autenticación */
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .auth-buttons a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #00000030;
+            transition: background-color 0.3s ease;
+        }
+
+        .auth-buttons a:hover {
+            background-color: #ff000067;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+            }
+
+            nav.menu {
+                flex-direction: column;
+            }
+
+            .menu-left,
+            .menu-right {
+                justify-content: center;
+            }
+
+            .auth-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <!-- Menú del usuario -->
-        <div class="dropdown menu-dropdown">
-            <button class="dropbtn">≡</button>
-            <div class="dropdown-content">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">
+                <img src="{% static 'favicon.ico' %}" 
+                     alt="Casa Texas Mexico"
+                     style="max-width: 100px; height: auto;">
+            </a>
+        </div>
+        <nav class="menu">
+            <div class="menu-left">
                 <a href="{% url 'bebidas_list' %}">Bebidas</a>
                 <a href="{% url 'platos_list' %}">Platos</a>
                 {% if user.is_authenticated %}
@@ -22,40 +137,23 @@
                     <a href="{% url 'mispedidos_list' %}">Pedidos</a>
                 {% endif %}
             </div>
-        </div>
-        {% if user.is_authenticated %}
-            <div class="dropdown menu-dropdown">
-                <button class="dropbtn">Cuenta</button>
-                <div class="dropdown-content">
-                    <a href="{% url 'perfil' %}">Perfil</a>
-                    <a href="{% url 'editar_perfil' %}">Editar perfil</a>
-                    <!-- Botón de Cerrar Sesión -->
+            <div class="menu-right">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'perfil' %}">{{ user.username }}</a>
                     <form method="POST" action="{% url 'logout' %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link" style="padding: 12px 16px; margin: 0; background: none; border: none; color: #333; text-decoration: none; display: block; text-align: left; width: 100%;">
-                            Cerrar Sesión
-                        </button>
+                        <button type="submit" class="logout-button">Cerrar Sesión</button>
                     </form>
-                </div>
+                {% else %}
+                    <div class="auth-buttons">
+                        <a href="{% url 'login' %}">Iniciar Sesión</a>
+                        <a href="{% url 'register' %}">Registro</a>
+                    </div>
+                {% endif %}
             </div>
-        {% endif %}
-
-        <!-- Hacer que el título sea un enlace a la página de inicio -->
-        <h1><a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">Casa Texas Mexico</a></h1>
+        </nav>
     </header>
-
-    {% if user.is_authenticated %}
-        <p>Hola, {{ user.username }}!</p>
-        <form method="POST" action="{% url 'logout' %}" style="display:inline;">
-            {% csrf_token %}
-        </form>
-    {% else %}
-        <div class="auth-buttons">
-            <a href="{% url 'login' %}" class="auth-link">Iniciar Sesión</a>
-            <a href="{% url 'register' %}" class="auth-link">Registro</a>
-        </div>
-    {% endif %}
-
+    
     <main class="content">
         {% if messages %}
             <ul class="messages">

@@ -81,9 +81,18 @@
         margin-top: 10px;
         text-align: left;
     }
+    .titulo-centrado {
+        text-align: center; /* Asegura que el texto esté centrado horizontalmente */
+        margin-bottom: 20px; /* Espaciado inferior */
+        font-size: 2.5rem; /* Tamaño del texto */
+        color: #333; /* Color del texto */
+        font-family: 'Arial', sans-serif; /* Fuente limpia */
+    }
 </style>
 
-<h1 class="text-center mb-4">Platos</h1>
+<div class="container">
+    <h1 class="titulo-centrado">Platos</h1>
+</div>
 
 <!-- Formulario de Filtros -->
 <div class="container">
@@ -116,20 +125,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h3 class="card-title">{{ plato.nombre_plato }}</h3>
-                            <p><strong>Precio:</strong> {{ plato.precio_plato }}€</p>
-                            <p><strong>Ingredientes:</strong> 
-                                {% for ingrediente in plato.ingredientes.all %}
-                                    {{ ingrediente.nombre_ingrediente }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </p>
-                            <p><strong>Valoración Media:</strong> 
-                                {% if plato.media_valoracion %}
-                                    {{ plato.media_valoracion }} estrellas
-                                {% else %}
-                                    No hay valoraciones aún.
-                                {% endif %}
-                            </p>
+                            
                             {% if plato.image %}
                                 <div style="position: relative; display: inline-block;">
                                     <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="cursor: pointer;" onclick="document.getElementById('valoracion-form-{{ plato.id }}').style.display='block'">
@@ -148,6 +144,20 @@
                             {% else %}
                                 <p>No hay imagen disponible</p>
                             {% endif %}
+                            <h3 class="card-title">{{ plato.nombre_plato }}</h3>
+                            <p><strong>Precio:</strong> {{ plato.precio_plato }}€</p>
+                            <p><strong>Ingredientes:</strong> 
+                                {% for ingrediente in plato.ingredientes.all %}
+                                    {{ ingrediente.nombre_ingrediente }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                            <p><strong>Valoración Media:</strong> 
+                                {% if plato.media_valoracion %}
+                                    {{ plato.media_valoracion }} estrellas
+                                {% else %}
+                                    No hay valoraciones aún.
+                                {% endif %}
+                            </p>
                             <br>
                             <button class="btn btn-secondary mt-2" onclick="toggleValoraciones('{{ plato.id }}')">Ver Valoraciones</button>
                             

@@ -3,12 +3,12 @@
 {% block title %}Mis pedidos{% endblock %}
 
 {% block content %}
-    <h2 class="text-center mb-4">Mis Pedidos</h2>
-    <div class="container">
+    <div class="mis-pedidos-container">
+        <h2 class="text-center mb-4">Mis Pedidos</h2>
         {% if pedidos %}
             <ul class="list-group">
                 {% for pedido in pedidos %}
-                    <li class="list-group-item">
+                    <li class="list-group-item text-center">
                         <strong>Plato:</strong> {{ pedido.plato }}<br>
                         <strong>Cantidad:</strong> {{ pedido.cantidad }}<br>
                         <strong>Observaciones:</strong> {{ pedido.observaciones|default:"Ninguna" }}<br>
@@ -26,4 +26,66 @@
             <p class="text-center">No has realizado ningún pedido.</p>
         {% endif %}
     </div>
+
+    <style>
+        /* Estilo para el contenedor de pedidos */
+        .mis-pedidos-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Estilo para el botón de eliminar */
+        .btn-danger {
+            background-color: #dc3545; /* Rojo para indicar eliminación */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333; /* Color más oscuro al pasar el mouse */
+        }
+
+        /* Estilo para los elementos de la lista de pedidos */
+        .list-group-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .list-group-item:hover {
+            background-color: #f1f1f1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-group-item p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .list-group-item p strong {
+            color: #333;
+        }
+
+        /* Mensaje de no pedidos */
+        .no-pedidos {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+    </style>
 {% endblock %}

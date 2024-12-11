@@ -77,7 +77,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'restaurante.wsgi.application'
 
-
+handler403 = 'django.views.defaults.permission_denied'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 

@@ -23,5 +23,5 @@ urlpatterns = [
     path('valoracion/eliminar/<int:valoracion_id>/', ValoracionEliminarView.as_view(), name='valoracion_eliminar'),
 
     # API URLs
-    #path('api/', include('reservas.urls_api')),  # Agrega las rutas de la API bajo el prefijo /api/
+    path('api/', include('reservas.urls_api')),  # Agrega las rutas de la API bajo el prefijo /api/
 ]

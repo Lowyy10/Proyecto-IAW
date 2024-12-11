@@ -1,14 +1,98 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block title %}Hacer Pedido{% endblock %}
+
 {% block content %}
 
-    <h2 class="text-center mb-4">Crear Pedido</h2>
-    <div class="container">
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Crear Pedido</button>
-        </form>
-    </div>
+<div class="edit-profile-container">
+    <h2>Crear Pedido</h2>
+    <form method="post" class="edit-profile-form">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }} <!-- Renderiza los campos del formulario automáticamente -->
+        </div>
+        <button type="submit" class="btn-save">Crear Pedido</button>
+        <a href="{% url 'home' %}" class="btn-cancel">Cancelar</a>
+    </form>
+</div>
+
+<style>
+    /* Reutilizamos el estilo de editar_perfil */
+    .edit-profile-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        font-family: 'Arial', sans-serif;
+    }
+
+    .edit-profile-container h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .edit-profile-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group {
+        text-align: left;
+    }
+
+    .form-group label {
+        color: #555;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .edit-profile-form textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .edit-profile-form textarea:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .btn-save {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-save:hover {
+        background-color: #218838;
+    }
+
+    .btn-cancel {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s;
+    }
+
+    .btn-cancel:hover {
+        color: #343a40;
+    }
+</style>
+
 {% endblock %}

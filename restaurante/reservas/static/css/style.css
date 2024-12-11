@@ -138,6 +138,14 @@ header h1 {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ocupa toda la altura de la ventana */
+    background-color: #ffffff; /* Opcional: puede coincidir con tu fondo actual */
+}
+
 /* Formulario */
 .form-container {
     max-width: 400px;

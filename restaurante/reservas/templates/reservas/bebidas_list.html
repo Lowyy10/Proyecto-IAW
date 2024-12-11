@@ -82,9 +82,18 @@
         margin-top: 10px;
         text-align: left; /* Alinear texto a la izquierda */
     }
+    .titulo-centrado {
+        text-align: center; /* Asegura que el texto esté centrado horizontalmente */
+        margin-bottom: 20px; /* Espaciado inferior */
+        font-size: 2.5rem; /* Tamaño del texto */
+        color: #333; /* Color del texto */
+        font-family: 'Arial', sans-serif; /* Fuente limpia */
+    }
 </style>
 
-<h1 class="text-center mb-4">Bebidas</h1>
+<div class="container">
+    <h1 class="titulo-centrado">Bebidas</h1>
+</div>
 
 <!-- Formulario de Filtros -->
 <div class="container">
@@ -117,20 +126,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h3 class="card-title">{{ bebida.nom_bebida }}</h3>
-                            <p><strong>Precio:</strong> {{ bebida.precio_bebida }}€</p>
-                            <p><strong>Tipos de bebida:</strong> 
-                                {% for tipo in bebida.tipo_bebi.all %}
-                                    {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </p>
-                            <p><strong>Valoración Media:</strong> 
-                                {% if bebida.media_valoracion %}
-                                    {{ bebida.media_valoracion }} estrellas
-                                {% else %}
-                                    No hay valoraciones aún.
-                                {% endif %}
-                            </p>
+                            
                             {% if bebida.image %}
                                 <div style="position: relative; display: inline-block;">
                                     <img src="{{ bebida.image.url }}" alt="{{ bebida.nom_bebida }}" style="cursor: pointer;" onclick="document.getElementById('valoracion-form-{{ bebida.id }}').style.display='block'">
@@ -150,6 +146,20 @@
                             {% else %}
                                 <p>No hay imagen disponible</p>
                             {% endif %}
+                            <h3 class="card-title">{{ bebida.nom_bebida }}</h3>
+                            <p><strong>Precio:</strong> {{ bebida.precio_bebida }}€</p>
+                            <p><strong>Tipos de bebida:</strong> 
+                                {% for tipo in bebida.tipo_bebi.all %}
+                                    {{ tipo.tipo_bebida }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                            <p><strong>Valoración Media:</strong> 
+                                {% if bebida.media_valoracion %}
+                                    {{ bebida.media_valoracion }} estrellas
+                                {% else %}
+                                    No hay valoraciones aún.
+                                {% endif %}
+                            </p>
                             <br>
                             <!-- Botón para ver valoraciones -->
                             <button class="btn btn-secondary mt-2" onclick="toggleValoraciones('{{ bebida.id }}')">Ver Valoraciones</button>

@@ -8,7 +8,9 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
+from django.http import HttpResponseForbidden
 from django.views.generic import CreateView
 from django.views.generic.edit import DeleteView
 from django.db import models
@@ -29,7 +31,43 @@ class MisPedidosCreateView(CreateView):
 
 class PedidoDeleteView(DeleteView):
     model = MisPedidos
-    success_url = reverse_lazy("mispedidos_list")
+    template_name = 'reservas/deletepedido_list.html'  # Asegúrate de que este sea el nombre correcto de tu plantilla
+    success_url = reverse_lazy('mispedidos_list')  # Redirige a la lista de pedidos después de eliminar
+
+    def get_object(self):
+        # Obtener el pedido por su ID
+        pedido = get_object_or_404(MisPedidos, pk=self.kwargs['pk'])
+
+        # Verificar que el usuario autenticado sea el propietario del pedido
+        if pedido.usuario != self.request.user:
+            # Si el usuario no es el propietario, denegar el acceso
+            messages.error(self.request, "No tienes permiso para eliminar ese pedido.")  # Mostrar mensaje de error
+            return None  # Devolver None para que no se renderice el formulario de eliminación
+
+        return pedido
+
+    def get(self, request, *args, **kwargs):
+        # Si no tienes permisos, redirigir inmediatamente
+        pedido = self.get_object()
+        if not pedido:
+            return redirect('mispedidos_list')  # Redirige a la lista de pedidos si no tienes permiso
+        
+        # Si tienes permiso, proceder con la eliminación
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # Aquí se maneja el formulario POST para eliminar el objeto
+        pedido = self.get_object()
+        if not pedido:
+            return redirect('mispedidos_list')  # Si no tienes permiso, redirige a la lista de pedidos
+        
+        # Eliminar el objeto
+        pedido.delete()
+        
+        # Redirigir a la lista de pedidos después de la eliminación
+        messages.success(self.request, "Pedido eliminado con éxito.")
+        return redirect(self.success_url)
+
 
 class CrearPedidoView(CreateView):
     model = MisPedidos

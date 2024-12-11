@@ -1,5 +1,29 @@
-<form method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    {{ form }}
-    <input type="submit" value="Confirm">
-</form>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Eliminar Pedido{% endblock %}
+
+{% block content %}
+    <h2 class="text-center mb-4">Confirmar eliminación del pedido</h2>
+    
+    {% if messages %}
+        <div class="alert alert-danger">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if object %}
+        <div class="container">
+            <h3>Plato: {{ object.plato }}</h3>
+            <p><strong>Cantidad:</strong> {{ object.cantidad }}</p>
+            <p><strong>Observaciones:</strong> {{ object.observaciones|default:"Ninguna" }}</p>
+            <p><strong>Fecha del pedido:</strong> {{ object.fecha_pedido }}</p>
+
+            <form action="{% url 'pedido_eliminar' object.id %}" method="post" class="mt-2" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este pedido? Esta acción no se puede deshacer.');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}
