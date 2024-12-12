@@ -38,11 +38,11 @@ class PedidoDeleteView(DeleteView):
         # Obtener el pedido por su ID
         pedido = get_object_or_404(MisPedidos, pk=self.kwargs['pk'])
 
-        # Verificar que el usuario autenticado sea el propietario del pedido
-        if pedido.usuario != self.request.user:
-            # Si el usuario no es el propietario, denegar el acceso
-            messages.error(self.request, "No tienes permiso para eliminar ese pedido.")  # Mostrar mensaje de error
-            return None  # Devolver None para que no se renderice el formulario de eliminación
+        # Verificar que el usuario autenticado sea el propietario del pedido o si es Luis
+        if pedido.usuario != self.request.user and self.request.user.username != 'luis':
+            # Si el usuario no es el propietario ni es Luis, denegar el acceso
+            messages.error(self.request, "No tienes permiso para eliminar este pedido.")  # Mostrar mensaje de error
+            return None  # No se devolverá el objeto para proceder con la eliminación
 
         return pedido
 
@@ -50,7 +50,7 @@ class PedidoDeleteView(DeleteView):
         # Si no tienes permisos, redirigir inmediatamente
         pedido = self.get_object()
         if not pedido:
-            return redirect('mispedidos_list')  # Redirige a la lista de pedidos si no tienes permiso
+            return redirect(self.success_url)  # Redirige a la lista de pedidos si no tienes permiso
         
         # Si tienes permiso, proceder con la eliminación
         return super().get(request, *args, **kwargs)
@@ -59,7 +59,7 @@ class PedidoDeleteView(DeleteView):
         # Aquí se maneja el formulario POST para eliminar el objeto
         pedido = self.get_object()
         if not pedido:
-            return redirect('mispedidos_list')  # Si no tienes permiso, redirige a la lista de pedidos
+            return redirect(self.success_url)  # Si no tienes permiso, redirige a la lista de pedidos
         
         # Eliminar el objeto
         pedido.delete()
@@ -67,6 +67,7 @@ class PedidoDeleteView(DeleteView):
         # Redirigir a la lista de pedidos después de la eliminación
         messages.success(self.request, "Pedido eliminado con éxito.")
         return redirect(self.success_url)
+
 
 
 class CrearPedidoView(CreateView):
@@ -215,7 +216,10 @@ class MisPedidosListView(ListView):
     context_object_name = 'pedidos'
 
     def get_queryset(self):
-        # Filtra los pedidos para mostrar solo los del usuario autenticado
+        # Si el usuario autenticado es Luis, devolver todos los pedidos
+        if self.request.user.username == 'luis':
+            return MisPedidos.objects.all()
+        # De lo contrario, devolver solo los pedidos del usuario autenticado
         return MisPedidos.objects.filter(usuario=self.request.user)
 
 
