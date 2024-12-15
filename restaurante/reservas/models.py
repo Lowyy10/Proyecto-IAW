@@ -42,7 +42,6 @@ class Tipo_bebida(models.Model):
 
 class Bebidas(models.Model):
     ESTRELLAS = [
-        (0, '☆☆☆☆☆'),
         (1, '★☆☆☆☆'),
         (2, '★★☆☆☆'),
         (3, '★★★☆☆'),

@@ -12,7 +12,22 @@
             <div class="plato-card" style="border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 15px; max-width: 300px; text-align: center;">
                 <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="width: 100%; border-radius: 10px;">
                 <h3 style="margin-top: 10px;">{{ plato.nombre_plato }}</h3>
-                <p style="color: #777;">Valoración Media: {{ plato.media_valoracion|default:0|floatformat:2 }}</p>
+                <p style="color: #777;">Valoración Media: {% if plato.media_valoracion %}
+                    {% if plato.media_valoracion <= 1 %}
+                        🌮/5
+                    {% elif plato.media_valoracion <= 2 %}
+                        🌮🌮/5
+                    {% elif plato.media_valoracion <= 3 %}
+                        🌮🌮🌮/5
+                    {% elif plato.media_valoracion <= 4 %}
+                        🌮🌮🌮🌮/5
+                    {% elif plato.media_valoracion >= 5 %}
+                        🌮🌮🌮🌮🌮/5
+                    {% endif %}
+                    <!-- {{ plato.media_valoracion }} estrellas -->
+                {% else %}
+                    No hay valoraciones aún.
+                {% endif %}</p>
                 <p style="font-weight: bold;">${{ plato.precio_plato }}</p>
             </div>
             {% endfor %}

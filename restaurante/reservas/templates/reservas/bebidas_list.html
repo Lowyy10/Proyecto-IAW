@@ -155,7 +155,17 @@
                             </p>
                             <p><strong>Valoración Media:</strong> 
                                 {% if bebida.media_valoracion %}
-                                    {{ bebida.media_valoracion }} estrellas
+                                    {% if bebida.media_valoracion <= 1 %}
+                                        🍺/5
+                                    {% elif bebida.media_valoracion <= 2 %}
+                                        🍺🍺/5
+                                    {% elif bebida.media_valoracion <= 3 %}
+                                        🍺🍺🍺/5
+                                    {% elif bebida.media_valoracion <= 4 %}
+                                        🍺🍺🍺🍺/5
+                                    {% elif bebida.media_valoracion >= 5 %}
+                                        🍺🍺🍺🍺🍺/5
+                                    {% endif %}
                                 {% else %}
                                     No hay valoraciones aún.
                                 {% endif %}

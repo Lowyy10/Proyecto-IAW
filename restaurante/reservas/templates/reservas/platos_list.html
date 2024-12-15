@@ -153,7 +153,18 @@
                             </p>
                             <p><strong>Valoración Media:</strong> 
                                 {% if plato.media_valoracion %}
-                                    {{ plato.media_valoracion }} estrellas
+                                    {% if plato.media_valoracion <= 1 %}
+                                        🌮/5
+                                    {% elif plato.media_valoracion <= 2 %}
+                                        🌮🌮/5
+                                    {% elif plato.media_valoracion <= 3 %}
+                                        🌮🌮🌮/5
+                                    {% elif plato.media_valoracion <= 4 %}
+                                        🌮🌮🌮🌮/5
+                                    {% elif plato.media_valoracion >= 5 %}
+                                        🌮🌮🌮🌮🌮/5
+                                    {% endif %}
+                                    <!-- {{ plato.media_valoracion }} estrellas -->
                                 {% else %}
                                     No hay valoraciones aún.
                                 {% endif %}
