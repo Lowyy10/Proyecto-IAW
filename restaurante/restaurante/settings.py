@@ -139,4 +139,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
-CSRF_TRUSTED_ORIGINS = ['https://casatexasmexico.duckdns.org']
+CSRF_TRUSTED_ORIGINS = ['https://3.84.32.109','https://casatexasmexico.duckdns.org']

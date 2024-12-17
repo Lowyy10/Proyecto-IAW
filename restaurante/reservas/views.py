@@ -28,45 +28,42 @@ class MisPedidosCreateView(CreateView):
     def form_valid(self, form):
         # Aquí puedes agregar lógica adicional si es necesario
         return super().form_valid(form)
-
+from django.http import Http404
 class PedidoDeleteView(DeleteView):
     model = MisPedidos
-    template_name = 'reservas/deletepedido_list.html'  # Asegúrate de que este sea el nombre correcto de tu plantilla
-    success_url = reverse_lazy('mispedidos_list')  # Redirige a la lista de pedidos después de eliminar
+    template_name = 'reservas/deletepedido_list.html'
+    success_url = reverse_lazy('mispedidos_list')
 
     def get_object(self):
-        # Obtener el pedido por su ID
-        pedido = get_object_or_404(MisPedidos, pk=self.kwargs['pk'])
+        try:
+            pedido = MisPedidos.objects.get(pk=self.kwargs['pk'])
+        except MisPedidos.DoesNotExist:
+            messages.error(self.request, "El pedido no existe o no tienes permiso")  # Mensaje si el pedido no existe
+            raise Http404("Pedido no encontrado.")  # Lanzar excepción 404
 
-        # Verificar que el usuario autenticado sea el propietario del pedido o si es Luis
+        # Verificar que el usuario tenga acceso al pedido
         if pedido.usuario != self.request.user and self.request.user.username != 'luis':
-            # Si el usuario no es el propietario ni es Luis, denegar el acceso
-            messages.error(self.request, "No tienes permiso para eliminar este pedido.")  # Mostrar mensaje de error
-            return None  # No se devolverá el objeto para proceder con la eliminación
+            messages.error(self.request, "No tienes permiso para eliminar este pedido.")  # Mensaje de error
+            raise PermissionDenied  # Lanzar excepción de permiso denegado
 
         return pedido
 
     def get(self, request, *args, **kwargs):
-        # Si no tienes permisos, redirigir inmediatamente
-        pedido = self.get_object()
-        if not pedido:
-            return redirect(self.success_url)  # Redirige a la lista de pedidos si no tienes permiso
-        
-        # Si tienes permiso, proceder con la eliminación
+        try:
+            self.object = self.get_object()  # Intentar obtener el objeto
+        except (Http404, PermissionDenied):
+            return redirect(self.success_url)  # Redirigir si hay un error
+
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        # Aquí se maneja el formulario POST para eliminar el objeto
-        pedido = self.get_object()
-        if not pedido:
-            return redirect(self.success_url)  # Si no tienes permiso, redirige a la lista de pedidos
-        
-        # Eliminar el objeto
-        pedido.delete()
-        
-        # Redirigir a la lista de pedidos después de la eliminación
-        messages.success(self.request, "Pedido eliminado con éxito.")
-        return redirect(self.success_url)
+        try:
+            self.object = self.get_object()  # Intentar obtener el objeto
+        except (Http404, PermissionDenied):
+            return redirect(self.success_url)  # Redirigir si hay un error
+
+        return super().post(request, *args, **kwargs)
+
 
 
 
