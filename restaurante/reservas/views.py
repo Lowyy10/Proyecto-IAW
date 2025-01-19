@@ -138,14 +138,28 @@ class PlatosListView(ListView):
 
         return queryset
 
-class ValoracionEliminarView(View):
+class ValoracionEliminarPlatoView(View):
     def post(self, request, *args, **kwargs):
         valoracion_id = kwargs.get('valoracion_id')
-        # Obtén la valoración, asegurándote de que pertenezca al usuario actual
-        valoracion = get_object_or_404(Valoracion, id=valoracion_id, usuario=request.user)
+        # Obtén la valoración del plato, asegurándote de que pertenezca al usuario actual
+        valoracion = get_object_or_404(ValoracionPlato, id=valoracion_id, usuario=request.user)
+        
         valoracion.delete()  # Elimina la valoración
-        return redirect('bebidas_list')
-    
+        messages.success(request, "Valoración eliminada con éxito.")
+        return redirect('platos_list')  # Redirige a la lista de platos    
+
+class ValoracionEliminarBebidaView(View):
+    def post(self, request, *args, **kwargs):
+        valoracion_id = kwargs.get('valoracion_id')
+        # Obtén la valoración de la bebida, asegurándote de que pertenezca al usuario actual
+        valoracion = get_object_or_404(Valoracion, id=valoracion_id, usuario=request.user)
+        
+        valoracion.delete()  # Elimina la valoración
+        messages.success(request, "Valoración eliminada con éxito.")
+        return redirect('bebidas_list')  # Redirige a la lista de bebidas
+
+
+
 class BebidasListView(ListView):
     model = Bebidas
     context_object_name = 'photos'
@@ -206,6 +220,15 @@ class BebidasListView(ListView):
 
         return queryset
 
+class ValoracionEliminarBebidaView(View):
+    def post(self, request, *args, **kwargs):
+        valoracion_id = kwargs.get('valoracion_id')
+        # Obtén la valoración de la bebida, asegurándote de que pertenezca al usuario actual
+        valoracion = get_object_or_404(Valoracion, id=valoracion_id, usuario=request.user)
+        
+        valoracion.delete()  # Elimina la valoración
+        messages.success(request, "Valoración eliminada con éxito.")
+        return redirect('bebidas_list')  # Redirige a la lista de bebidas
 
 class MisPedidosListView(ListView):
     model = MisPedidos

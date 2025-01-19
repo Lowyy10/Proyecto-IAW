@@ -182,7 +182,7 @@
                                         <strong>{{ valoracion.usuario.username }}</strong> - 
                                         {{ valoracion.valoracion }} estrellas
                                         {% if valoracion.usuario == request.user %}
-                                            <form action="{% url 'valoracion_eliminar' valoracion.id %}" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu valoracion? Esta acción no se puede deshacer.');">
+                                            <form action="{% url 'eliminar_valoracion_bebida' valoracion_id=valoracion.id %}" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu valoracion? Esta acción no se puede deshacer.');">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-danger btn-sm">Eliminar Valoración</button>
                                             </form>
