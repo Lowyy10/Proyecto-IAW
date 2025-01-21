@@ -81,13 +81,22 @@ handler403 = 'django.views.defaults.permission_denied'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'casatexasmexico',  # Cambia al nombre de la base de datos remota
+        'USER': 'postgres',     # Usuario de PostgreSQL remoto
+        'PASSWORD': 'luis1234',  # Contraseña del usuario remoto
+        'HOST': '10.0.2.40', # IP o dominio del servidor PostgreSQL
+        'PORT': '5432',               # Puerto de PostgreSQL (normalmente 5432)
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
