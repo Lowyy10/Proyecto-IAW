@@ -10,9 +10,13 @@
         <div class="platos-grid" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
             {% for plato in top_platos %}
             <div class="plato-card" style="border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 15px; max-width: 300px; text-align: center;">
-                <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="width: 100%; border-radius: 10px;">
+		{% if plato.image %}
+    			<img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="width: 100%; border-radius: 10px;">
+		{% else %}
+    			<p>No hay imagen disponible</p>
+		{% endif %}
                 <h3 style="margin-top: 10px;">{{ plato.nombre_plato }}</h3>
-                <p style="color: #777;">Valoración Media: {% if plato.media_valoracion %}
+                <p style="color: #333;">Valoración Media: {% if plato.media_valoracion %}
                     {% if plato.media_valoracion <= 1 %}
                         🌮/5
                     {% elif plato.media_valoracion <= 2 %}

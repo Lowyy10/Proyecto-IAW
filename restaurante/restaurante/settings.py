@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'reservas',
     'rest_framework',
+
 ]
 
 MIDDLEWARE = [
@@ -149,3 +150,4 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
 CSRF_TRUSTED_ORIGINS = ['https://3.84.32.109','https://casatexasmexico.duckdns.org']
+WAGTAILADMIN_BASE_URL = 'https://casatexasmexico.duckdns.org'

@@ -24,15 +24,16 @@
     }
 
     .card {
-        border: 1px solid #e0e0e0;
+        border: 1px solid #ccc; /* Mayor contraste */
         border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s, box-shadow 0.2s;
+        background-color: #fff;
     }
 
     .card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
     .card-body {
@@ -44,6 +45,7 @@
         font-size: 1.5rem;
         font-weight: bold;
         margin-bottom: 10px;
+        color: #222; /* Color más oscuro para mejor contraste */
     }
 
     img {
@@ -56,23 +58,24 @@
 
     p {
         margin: 5px 0;
-        color: #555;
+        color: #222; /* Mejor contraste */
     }
 
     .text-danger {
-        color: red;
+        color: #d9534f; /* Rojo accesible */
         font-weight: bold;
     }
 
     h4 {
         margin-top: 15px;
         font-size: 1.2rem;
+        color: #444;
     }
 
     hr {
         border: 0;
         height: 2px;
-        background-color: red;
+        background-color: #d9534f;
         margin: 20px 0;
     }
 
@@ -81,12 +84,13 @@
         margin-top: 10px;
         text-align: left;
     }
+    
     .titulo-centrado {
-        text-align: center; /* Asegura que el texto esté centrado horizontalmente */
-        margin-bottom: 20px; /* Espaciado inferior */
-        font-size: 2.5rem; /* Tamaño del texto */
-        color: #333; /* Color del texto */
-        font-family: 'Arial', sans-serif; /* Fuente limpia */
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2.5rem;
+        color: #111;
+        font-family: 'Arial', sans-serif;
     }
 </style>
 
@@ -94,7 +98,6 @@
     <h1 class="titulo-centrado">Platos</h1>
 </div>
 
-<!-- Formulario de Filtros -->
 <div class="container">
     <form method="GET" class="mb-4">
         <div class="row">
@@ -117,7 +120,6 @@
     </form>
 </div>
 
-<!-- Lista de Platos -->
 <div class="container">
     <div class="row">
         {% if object_list %}
@@ -125,22 +127,8 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            
                             {% if plato.image %}
-                                <div style="position: relative; display: inline-block;">
-                                    <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="cursor: pointer;" onclick="document.getElementById('valoracion-form-{{ plato.id }}').style.display='block'">
-                                    
-                                    {% if user.is_authenticated %}
-                                        <form id="valoracion-form-{{ plato.id }}" action="" method="POST" style="display: none;">
-                                            {% csrf_token %}
-                                            {{ valoracion_form.as_p }}
-                                            <input type="hidden" name="plato_id" value="{{ plato.id }}">
-                                            <button type="submit" class="btn btn-primary mt-2">Enviar Valoración</button>
-                                        </form>
-                                    {% else %}
-                                        <p class="text-danger">Inicia sesión para valorar este plato.</p>
-                                    {% endif %}
-                                </div>
+                                <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}">
                             {% else %}
                                 <p>No hay imagen disponible</p>
                             {% endif %}
@@ -152,7 +140,7 @@
                                 {% endfor %}
                             </p>
                             <p><strong>Valoración Media:</strong> 
-                                {% if plato.media_valoracion %}
+				{% if plato.media_valoracion %}
                                     {% if plato.media_valoracion <= 1 %}
                                         🌮/5
                                     {% elif plato.media_valoracion <= 2 %}
@@ -169,21 +157,13 @@
                                     No hay valoraciones aún.
                                 {% endif %}
                             </p>
-                            <br>
                             <button class="btn btn-secondary mt-2" onclick="toggleValoraciones('{{ plato.id }}')">Ver Valoraciones</button>
-                            
                             <div id="valoraciones-{{ plato.id }}" class="valoraciones">
                                 <h4>Mis Valoraciones:</h4>
                                 {% for valoracion in plato.valoraciones.all %}
                                     <div>
                                         <strong>{{ valoracion.usuario.username }}</strong> - 
                                         {{ valoracion.valoracion }} estrellas
-                                        {% if valoracion.usuario == request.user %}
-                                            <form action="{% url 'eliminar_valoracion_plato' valoracion_id=valoracion.id %}" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu valoración? Esta acción no se puede deshacer.');">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-danger btn-sm">Eliminar Valoración</button>
-                                            </form>
-                                        {% endif %}
                                     </div>
                                 {% empty %}
                                     <p>No has valorado este plato.</p>
@@ -192,9 +172,6 @@
                         </div>
                     </div>
                 </div>
-                <br>
-                <hr />
-                <br>
             {% endfor %}
         {% else %}
             <p class="text-center">No hay platos disponibles en este momento.</p>
@@ -205,11 +182,7 @@
 <script>
     function toggleValoraciones(platoId) {
         var valoracionesDiv = document.getElementById('valoraciones-' + platoId);
-        if (valoracionesDiv.style.display === 'none' || valoracionesDiv.style.display === '') {
-            valoracionesDiv.style.display = 'block';
-        } else {
-            valoracionesDiv.style.display = 'none';
-        }
+        valoracionesDiv.style.display = valoracionesDiv.style.display === 'none' ? 'block' : 'none';
     }
 </script>
 
