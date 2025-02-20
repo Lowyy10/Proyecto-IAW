@@ -27,6 +27,15 @@
             {{ form.password2.label_tag }}
             {{ form.password2 }}
         </div>
+        
+        <!-- Campo de consentimiento -->
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="consentimiento" required>
+                Acepto la <a href="{% url 'politica_privacidad' %}" target="_blank">política de privacidad</a> y el tratamiento de mis datos personales.
+            </label>
+        </div>
+
         <button type="submit" class="btn-submit">Registrarse</button>
     </form>
     <p class="login-link">¿Ya tienes cuenta? <a href="{% url 'login' %}">Iniciar Sesión</a></p>

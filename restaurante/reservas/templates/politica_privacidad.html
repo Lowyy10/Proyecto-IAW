@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Política de Privacidad{% endblock %}
+
+{% block content %}
+<div class="policy-container">
+    <div class="policy-header">
+        <h2>Política de Privacidad</h2>
+    </div>
+    <div class="policy-content">
+        <p>Última actualización: Enero 2025</p>
+
+        <h3>1. Introducción</h3>
+        <p>En [Nombre de tu Empresa] nos tomamos muy en serio la privacidad de nuestros usuarios. Esta política de privacidad describe cómo recopilamos, usamos, protegemos y compartimos tus datos personales cuando utilizas nuestros servicios.</p>
+
+        <h3>2. Información que recopilamos</h3>
+        <p>Recopilamos los siguientes tipos de información cuando usas nuestro servicio:</p>
+        <ul>
+            <li><strong>Información personal:</strong> Nombre, dirección de correo electrónico, número de teléfono, etc.</li>
+            <li><strong>Información de uso:</strong> Datos sobre cómo interactúas con nuestra plataforma, como la IP, el tipo de dispositivo y la actividad en el sitio.</li>
+        </ul>
+
+        <h3>3. Cómo usamos tu información</h3>
+        <p>Usamos la información que recopilamos para los siguientes fines:</p>
+        <ul>
+            <li>Para proporcionarte acceso a nuestros servicios y mejorar la experiencia de usuario.</li>
+            <li>Para enviarte actualizaciones y notificaciones relacionadas con tu cuenta.</li>
+            <li>Para analizar el uso del sitio y mejorar nuestros servicios.</li>
+        </ul>
+
+        <h3>4. ¿Con quién compartimos tu información?</h3>
+        <p>No compartimos tu información personal con terceros, excepto cuando sea necesario para cumplir con la ley o con nuestros socios de confianza que nos ayudan a operar nuestros servicios.</p>
+
+        <h3>5. Seguridad de los datos</h3>
+        <p>Implementamos medidas de seguridad adecuadas para proteger tu información personal contra el acceso no autorizado, la divulgación o alteración.</p>
+
+        <h3>6. Derechos de los usuarios</h3>
+        <p>Según el RGPD, tienes derecho a acceder, corregir, eliminar y restringir el uso de tus datos personales. Si deseas ejercer alguno de estos derechos, por favor, contacta con nosotros en [correo electrónico de contacto].</p>
+
+        <h3>7. Cambios en esta política</h3>
+        <p>Podemos actualizar esta política de privacidad de vez en cuando. Te notificaremos cualquier cambio importante publicando la nueva política en este sitio.</p>
+
+        <h3>8. Contacto</h3>
+        <p>Si tienes alguna pregunta sobre nuestra política de privacidad, no dudes en contactarnos en [correo electrónico de contacto].</p>
+    </div>
+</div>
+
+<style>
+    .policy-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .policy-header h2 {
+        color: #c62828; /* Rojo mexicano */
+        text-align: center;
+        font-size: 28px;
+    }
+
+    .policy-content p, .policy-content ul {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .policy-content ul {
+        margin-left: 20px;
+    }
+
+    .policy-content h3 {
+        color: #2e7d32; /* Verde mexicano */
+        font-size: 22px;
+        margin-top: 20px;
+    }
+</style>
+
+{% endblock %}

@@ -6,7 +6,7 @@ from .views import (
     editar_perfil, eliminar_perfil, ver_perfil, ValoracionEliminarPlatoView, ValoracionEliminarBebidaView
 )
 from django.contrib.auth import views as auth_views
-
+from . import views
 urlpatterns = [
     path('platos/', PlatosListView.as_view(), name='platos_list'),  
     path('mispedidos/', MisPedidosListView.as_view(), name='mispedidos_list'),    
@@ -22,6 +22,7 @@ urlpatterns = [
     path('registration/ver_perfil.html', ver_perfil, name='perfil'),
    # path('valoracion/eliminar/<int:valoracion_id>/', ValoracionEliminarView.as_view(), name='valoracion_eliminar'),
     path('eliminar/valoracion/plato/<int:valoracion_id>/', ValoracionEliminarPlatoView.as_view(), name='eliminar_valoracion_plato'),
+    path('politica-privacidad/', views.politica_privacidad, name='politica_privacidad'),
     path('eliminar/valoracion/bebida/<int:valoracion_id>/', ValoracionEliminarBebidaView.as_view(), name='eliminar_valoracion_bebida'),
     # API URLs
     path('api/', include('reservas.urls_api')),  # Agrega las rutas de la API bajo el prefijo /api/

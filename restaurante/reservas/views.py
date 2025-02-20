@@ -15,9 +15,12 @@ from django.views.generic import CreateView
 from django.views.generic.edit import DeleteView
 from django.db import models
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Avg, Count
 
 # Vistas para mostrar listas de objetos
+
+def politica_privacidad(request):
+    return render(request, 'politica_privacidad.html')
 
 class MisPedidosCreateView(CreateView):
     model = MisPedidos
@@ -251,13 +254,18 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Obtener los 3 platos más valorados
-        context['top_platos'] = Platos.objects.annotate(
-            media_valoracion=Avg('valoraciones__valoracion')
-        ).order_by('-media_valoracion')[:3]  # Solo los 3 primeros
+        
+        # Filtrar solo los platos que tienen valoraciones y ordenar de mayor a menor
+        context['top_platos'] = (
+            Platos.objects.annotate(
+                media_valoracion=Avg('valoraciones__valoracion'),
+                num_valoraciones=Count('valoraciones')
+            )
+            .filter(media_valoracion__isnull=False)  # Evitar platos sin valoraciones
+            .order_by('-media_valoracion', '-num_valoraciones')[:3]  # Priorizar los más valorados
+        )
+
         return context
-
-
 # Vista para iniciar sesión
 class IniciarSesion(LoginView):
     template_name = 'registration/login.html'

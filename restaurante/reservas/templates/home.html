@@ -10,13 +10,13 @@
         <div class="platos-grid" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
             {% for plato in top_platos %}
             <div class="plato-card" style="border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 15px; max-width: 300px; text-align: center;">
-		{% if plato.image %}
-    			<img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="width: 100%; border-radius: 10px;">
-		{% else %}
-    			<p>No hay imagen disponible</p>
-		{% endif %}
+                {% if plato.image %}
+                    <img src="{{ plato.image.url }}" alt="{{ plato.nombre_plato }}" style="width: 100%; border-radius: 10px;">
+                {% else %}
+                    <p>No hay imagen disponible</p>
+                {% endif %}
                 <h3 style="margin-top: 10px;">{{ plato.nombre_plato }}</h3>
-                <p style="color: #333;">Valoración Media: {% if plato.media_valoracion %}
+                <p style="color: #777;">Valoración Media: {% if plato.media_valoracion %}
                     {% if plato.media_valoracion <= 1 %}
                         🌮/5
                     {% elif plato.media_valoracion <= 2 %}
@@ -38,6 +38,16 @@
         </div>
     </section>
 </main>
+<!-- Pestaña flotante de cookies (Siempre visible) -->
+<div id="cookie-banner" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: #fff; padding: 15px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; text-align: center; z-index: 1000;">
+    <p style="margin: 0; padding: 10px; font-size: 14px; color: #333;">
+        Usamos cookies para mejorar tu experiencia. Acepta nuestras 
+        <a href="{% url 'politica_privacidad' %}" style="color: #007bff; text-decoration: none;">políticas de privacidad</a>.
+    </p>
+    <button id="acceptCookies" class="cookie-btn" style="margin: 5px; padding: 8px 12px; background: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Aceptar</button>
+    <button id="rejectCookies" class="cookie-btn" style="margin: 5px; padding: 8px 12px; background: #dc3545; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Rechazar</button>
+</div>
+
 {% endblock %}
 
 {% block navbar %}
@@ -58,4 +68,30 @@
             <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
         </li>
     {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("JavaScript cargado");
+
+        const cookieBanner = document.getElementById("cookie-banner");
+        const acceptBtn = document.getElementById("acceptCookies");
+        const rejectBtn = document.getElementById("rejectCookies");
+
+        if (acceptBtn && rejectBtn) {
+            acceptBtn.addEventListener("click", function() {
+                console.log("Aceptar cookies");
+                cookieBanner.style.display = "none";
+            });
+
+            rejectBtn.addEventListener("click", function() {
+                console.log("Rechazar cookies");
+                cookieBanner.style.display = "none";
+            });
+        } else {
+            console.log("No se encontraron los botones de cookies");
+        }
+    });
+</script>
 {% endblock %}
